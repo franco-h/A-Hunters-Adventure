@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="A-Hunters-Adventure" />
+        <module name="Team3_RPG" />
       </profile>
     </annotationProcessing>
   </component>
