@@ -3,14 +3,6 @@ package com.huntersadventure.model.item;
 import com.huntersadventure.model.item.Item;
 
 public class Weapon extends Item {
-    /*
-    Weapon is a subclass of Item that is used to create weapons.
-    - It has the following attributes
-    - String name;
-    - String description;
-    - Int damage;
-    - String attackName;
-     */
 
     int damage;
     String attackName;
