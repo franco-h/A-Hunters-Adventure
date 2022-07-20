@@ -1,9 +1,6 @@
-package com.huntersadventure.model.character;
-
-import com.huntersadventure.model.item.Item;
+package com.huntersadventure.model;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class NPC extends Character {
 
