@@ -1,0 +1,3 @@
+{"ManEater": {"health":200, "damage": 40, "shield": 0},
+  "Lawless Bandit": {"health":100, "damage": 20, "shield": 0},
+  "Faceless": {"health":50, "damage": 10, "shield": 0}}
