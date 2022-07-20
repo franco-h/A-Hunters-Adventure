@@ -1,6 +1,4 @@
-package com.huntersadventure.model.item;
-
-import com.huntersadventure.model.item.Item;
+package com.huntersadventure.model;
 
 public class Weapon extends Item {
 

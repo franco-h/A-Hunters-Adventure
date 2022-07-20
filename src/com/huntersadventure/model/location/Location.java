@@ -1,6 +1,6 @@
 package com.huntersadventure.model.location;
 
-import com.huntersadventure.model.item.Item;
+import com.huntersadventure.model.Item;
 
 import java.util.Objects;
 

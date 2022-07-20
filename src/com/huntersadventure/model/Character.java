@@ -1,4 +1,4 @@
-package com.huntersadventure.model.character;
+package com.huntersadventure.model;
 
 public class Character {
 

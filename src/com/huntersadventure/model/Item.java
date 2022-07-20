@@ -1,4 +1,4 @@
-package com.huntersadventure.model.item;
+package com.huntersadventure.model;
 
 public class Item {
 
