@@ -3,20 +3,12 @@ package com.huntersadventure.model.character;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Player<Item> extends Character {
-    // Extend Character class
-    // Add the following attributes:
-    // - Int health;
-    // - Int damage;
-    // - Int shield;
-    // - ArrayList<Item> inventory;
+public class Player extends Character {
 
     private int health;
     private int damage;
     private int shield;
-    private ArrayList<Item> inventory;
 
-    // No-arg constructor
     public Player() {
     }
 
@@ -25,7 +17,6 @@ public class Player<Item> extends Character {
         this.health = health;
         this.damage = damage;
         this.shield = shield;
-        this.inventory = new ArrayList<Item>();
     }
 
     public int getHealth() {
@@ -52,27 +43,6 @@ public class Player<Item> extends Character {
         this.shield = shield;
     }
 
-    public ArrayList<Item> getInventory() {
-        return inventory;
-    }
-
-    public void setInventory(ArrayList<Item> inventory) {
-        this.inventory = inventory;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Player<?> player = (Player<?>) o;
-        return getHealth() == player.getHealth() && getDamage() == player.getDamage() && getShield() == player.getShield() && Objects.equals(getInventory(), player.getInventory());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getHealth(), getDamage(), getShield(), getInventory());
-    }
-
     @Override
     public String toString() {
         return "Player{" +
@@ -80,7 +50,19 @@ public class Player<Item> extends Character {
                 ", health=" + health +
                 ", damage=" + damage +
                 ", shield=" + shield +
-                ", inventory=" + inventory +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Player player = (Player) o;
+        return getHealth() == player.getHealth() && getDamage() == player.getDamage() && getShield() == player.getShield();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getHealth(), getDamage(), getShield());
     }
 }

@@ -3,11 +3,6 @@ package com.huntersadventure.model.character;
 import java.util.Objects;
 
 public class Monster extends Character {
-    // Extend Character class
-    // Add the following attributes:
-    // - Int health;
-    // - Int damage;
-    // - Int shield;
 
     private int health;
     private int damage;

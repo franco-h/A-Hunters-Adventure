@@ -1,12 +1,7 @@
 package com.huntersadventure.model.item;
 
 public class Item {
-    /*
-    Item is a superclass that is used to create subclasses of items.
-    - It has the following attributes
-    - String name;
-    - String description;
-     */
+
     String name;
     String description;
 
