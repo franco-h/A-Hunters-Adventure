@@ -1,7 +1,11 @@
-package com.huntersadventure.model;
+package com.huntersadventure.model.character;
 
 public class Character {
+
     String name;
+
+    public Character() {
+    }
 
     public Character(String name) {
         this.name = name;
@@ -14,5 +18,4 @@ public class Character {
     public void setName(String name) {
         this.name = name;
     }
-
 }
