@@ -1,5 +1,7 @@
 package com.huntersadventure.model.character;
 
+import com.huntersadventure.model.item.Item;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -8,6 +10,7 @@ public class Player extends Character {
     private int health;
     private int damage;
     private int shield;
+    private ArrayList<Item> inventory = new ArrayList<>();
 
     public Player() {
     }
