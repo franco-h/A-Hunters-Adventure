@@ -3,6 +3,7 @@ package com.huntersadventure.jsonparser;
 import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.*;
 
+import java.io.File;
 import java.io.IOException;
 
 public class Json {
@@ -15,7 +16,7 @@ public class Json {
         return defaultObjectMapper;
     }
 
-    public static JsonNode parse(String src) throws IOException {
+    public static JsonNode parse(File src) throws IOException {
         return objectMapper.readTree(src);
     }
 

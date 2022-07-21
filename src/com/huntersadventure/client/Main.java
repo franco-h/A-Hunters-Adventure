@@ -1,4 +1,4 @@
-package src.com.huntersadventure.client;
+package com.huntersadventure.client;
 
 import src.com.huntersadventure.view.GameView;
 
