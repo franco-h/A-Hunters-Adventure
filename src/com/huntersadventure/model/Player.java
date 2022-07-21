@@ -1,6 +1,7 @@
 package com.huntersadventure.model;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Player extends Character {
@@ -8,16 +9,19 @@ public class Player extends Character {
     private int health;
     private int damage;
     private int shield;
-    private ArrayList<Item> inventory = new ArrayList<>();
+    private List<String> inventory;
+    private Location location;
 
     public Player() {
     }
 
-    public Player(String name, int health, int damage, int shield) {
+    public Player(String name, int health, int damage, int shield, List<String> inventory, Location location) {
         super(name);
         this.health = health;
         this.damage = damage;
         this.shield = shield;
+        this.inventory = inventory;
+        this.location = location;
     }
 
     public int getHealth() {
@@ -44,6 +48,22 @@ public class Player extends Character {
         this.shield = shield;
     }
 
+    public List<String> getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(List<String> inventory) {
+        this.inventory = inventory;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
     @Override
     public String toString() {
         return "Player{" +
@@ -51,19 +71,9 @@ public class Player extends Character {
                 ", health=" + health +
                 ", damage=" + damage +
                 ", shield=" + shield +
+                ", inventory=" + inventory +
+                ", location=" + location +
                 '}';
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Player player = (Player) o;
-        return getHealth() == player.getHealth() && getDamage() == player.getDamage() && getShield() == player.getShield();
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getHealth(), getDamage(), getShield());
-    }
 }
