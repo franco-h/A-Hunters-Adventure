@@ -11,7 +11,7 @@ public class CharacterController {
     public static void main(String[] args) {
 
         try {
-            JsonNode node = Json.parse(new File("lib/locations/town.json"));
+            JsonNode node = Json.parse(new File("lib/locations/abandonedhouse.json"));
             Location location = Json.fromJson(node,
                     Location.class);
 
