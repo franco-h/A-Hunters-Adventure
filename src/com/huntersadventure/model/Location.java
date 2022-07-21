@@ -1,5 +1,6 @@
 package com.huntersadventure.model;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Location {
@@ -12,16 +13,16 @@ public class Location {
      */
     String name;
     String description;
-    Item item;
+    List<String> items;
     Object exit;
 
     public Location() {
     }
 
-    public Location(String name, String description, Item item, Object exit) {
+    public Location(String name, String description, List<String> items, Object exit) {
         this.name = name;
         this.description = description;
-        this.item = item;
+        this.items = items;
         this.exit = exit;
     }
 
@@ -41,12 +42,12 @@ public class Location {
         this.description = description;
     }
 
-    public Item getItem() {
-        return item;
+    public List<String> getItems() {
+        return items;
     }
 
-    public void setItem(Item item) {
-        this.item = item;
+    public void setItems(List<String> items) {
+        this.items = items;
     }
 
     public Object getExit() {
@@ -62,7 +63,7 @@ public class Location {
         return "Location{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", item=" + item +
+                ", items=" + items +
                 ", exit=" + exit +
                 '}';
     }
@@ -72,11 +73,11 @@ public class Location {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Location location = (Location) o;
-        return Objects.equals(getName(), location.getName()) && Objects.equals(getDescription(), location.getDescription()) && Objects.equals(getItem(), location.getItem()) && Objects.equals(getExit(), location.getExit());
+        return Objects.equals(getName(), location.getName()) && Objects.equals(getDescription(), location.getDescription()) && Objects.equals(items, location.items) && Objects.equals(getExit(), location.getExit());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getDescription(), getItem(), getExit());
+        return Objects.hash(getName(), getDescription(), items, getExit());
     }
 }
