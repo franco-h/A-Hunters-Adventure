@@ -1,4 +1,4 @@
-package src.com.huntersadventure.client;
+package com.huntersadventure.client;
 
 
 public class Main extends GameLogic{

@@ -1,4 +1,4 @@
-package src.com.huntersadventure.controller;
+package com.huntersadventure.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.huntersadventure.jsonparser.Json;
@@ -38,10 +38,15 @@ public class CharacterController {
 //            if (player.getInventory().contains(gtItem)) {
 //                guardTower.getItems().remove(1);
 //            }
-//
+//            System.out.println();
 //            System.out.println(guardTower);
+//            System.out.println(blackSmith);
+//            System.out.println(abandonedHouse);
+//            System.out.println();
 //            System.out.println(player);
 //            System.out.println(player.getLocation());
+//
+//
 //
 //
 //        } catch (IOException e) {
