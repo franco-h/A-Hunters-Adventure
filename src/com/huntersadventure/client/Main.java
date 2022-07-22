@@ -1,9 +1,10 @@
-package com.huntersadventure.client;
+package src.com.huntersadventure.client;
 
-import src.com.huntersadventure.view.GameView;
 
-public class Main {
+public class Main extends GameLogic{
     public static void main(String[] args) {
-        new GameView();
+        welcomeBanner();  //ASCII art will be read in from text when resources folder is created
+        startPrompt();  //Start prompt is very basic right now, not final version
+        inputToCont();  //inputToCont as a placeholder to keep program running
     }
 }

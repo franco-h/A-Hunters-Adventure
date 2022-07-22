@@ -1,8 +1,7 @@
-package com.huntersadventure.controller;
+package src.com.huntersadventure.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.huntersadventure.jsonparser.Json;
-import com.huntersadventure.model.*;
 import com.huntersadventure.model.Character;
 
 import java.io.File;
