@@ -1,5 +1,10 @@
 package com.huntersadventure.client;
 
+import com.huntersadventure.controller.CharacterController;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Scanner;
 
 
@@ -10,30 +15,13 @@ import java.util.Scanner;
  */
 public class GameLogic {
 
-    static Scanner scanner = new Scanner(System.in);
+    static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
-    public static void clearCons() {
-        for (int i = 0; i < 100; i++)
-            System.out.println();
-    }
-
-    public static void printBreak(int n) {
-        for (int i = 0; i < n; i++)
-            System.out.println("-");
-        System.out.println();
-    }
-
-    public static void inputToCont() {
-        System.out.println("Press Any Key to Continue");
-        scanner.next();
-    }
-
-    public static void startPrompt(){
-        System.out.print("View story introduction? y/n \n");
-        Scanner scanner = new Scanner(System.in);
-        String choice = scanner.nextLine();
-        if(choice.equals("yes") || choice.equals("YES") || choice.equals("y") || choice.equals("Y")) {
-            clearCons();
+    public static void startPrompt() throws IOException {
+        System.out.println("Welcome to the Hunter's Adventure!");
+        System.out.println("Do you want to see the instructions? (y/n)");
+        String input = in.readLine();
+        if (input.equals("y")) {
             System.out.println("----------THE STORY SO FAR----------");
             System.out.println("For eons humanity itself has been under attack from malevolent entities, vicious creatures, and the very forces of evil itself. Once nearly wiped out from existence,\n" +
                     "they were saved from extinction by the actions of other brave humans that not only stood against these evils, but actively searched for it in order to destroy it. \n" +
@@ -45,9 +33,40 @@ public class GameLogic {
                     "eventually destroy the creature that's been terrorizing the local town - whatever the cost...");
             System.out.println("--------------------");
             startGame();
-        } else if(choice.equals("no") || choice.equals("NO") || choice.equals("n") || choice.equals("N")) {
+        } else if (input.equals("n")) {
             startGame();
-        } else if(choice.equalsIgnoreCase("q") || choice.equalsIgnoreCase("quit")) {
+        } else {
+            System.out.println("Invalid input. Please try again.");
+            startPrompt();
+        }
+    }
+
+    public static void startGame() throws IOException {
+        System.out.println("Do you wish to start the game? y/n");
+        CharacterController controller = new CharacterController();
+
+        String input = in.readLine();
+        if (input.equals("y")) {
+            controller.startGame();
+        } else if (input.equals("n")) {
+            System.out.println("Thank you for playing!");
+            System.exit(0);
+        } else {
+            System.out.println("Invalid input. Please try again.");
+            startGame();
+        }
+    }
+
+    public static void quitGame() throws IOException {
+        System.out.println("Do you wish to quit the game? y/n");
+        String input = in.readLine();
+        if (input.equals("y")) {
+            System.out.println("Thank you for playing!");
+            System.exit(0);
+        } else if (input.equals("n")) {
+            startGame();
+        } else {
+            System.out.println("Invalid input. Please try again.");
             quitGame();
         }
     }
@@ -67,29 +86,14 @@ public class GameLogic {
                 "                                                                                                                                                                                   ");
     }
 
-
-
-    public static void startGame(){
-        System.out.println("Do you wish to start the game? y/n");
-        String ans = scanner.nextLine();
-        if(ans.equalsIgnoreCase("yes") || ans.equalsIgnoreCase("y")) {
-            System.out.println("placeholder text to confirm output");
-        } else if (ans.equalsIgnoreCase("n") || ans.equalsIgnoreCase("no")) {
-            System.out.println("the game will end now!");
-            System.exit(0);
-        }
+    public static void clearCons() {
+        for (int i = 0; i < 100; i++)
+            System.out.println();
     }
 
-    public static void quitGame(){
-        System.out.println("Do you wish to quit the game? y/n");
-        String input = scanner.nextLine();
-        if(input.equalsIgnoreCase("yes") || input.equalsIgnoreCase("y")) {
-            System.out.println("the game will end now!");
-            System.exit(0);
-        } else if (input.equalsIgnoreCase("n") || input.equalsIgnoreCase("no")) {
-            System.out.println("return placeholder");
-        }
+    public static void printBreak(int n) {
+        for (int i = 0; i < n; i++)
+            System.out.println("-");
+        System.out.println();
     }
-
-
 }
