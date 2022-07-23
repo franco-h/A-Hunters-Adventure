@@ -1,4 +1,4 @@
-package com.huntersadventure.client;
+package com.huntersadventure.controller;
 
 import com.huntersadventure.controller.CharacterController;
 

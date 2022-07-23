@@ -1,12 +1,6 @@
 package com.huntersadventure.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.huntersadventure.client.GameLogic;
-import com.huntersadventure.jsonparser.Json;
-import com.huntersadventure.model.Character;
-
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
