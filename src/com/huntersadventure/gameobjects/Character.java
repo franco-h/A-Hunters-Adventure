@@ -1,10 +1,8 @@
-package com.huntersadventure.model;
+package com.huntersadventure.gameobjects;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class Player extends Character {
+public class Character extends Prop{
 
     private int health;
     private int damage;
@@ -12,15 +10,31 @@ public class Player extends Character {
     private List<String> inventory;
     private Location location;
 
-    public Player() {
+    public Character() {
     }
 
-    public Player(String name, int health, int damage, int shield, List<String> inventory, Location location) {
+    // NPC Constructor
+    public Character(String name, String description, List<String> inventory, Location location) {
+        super(name, description);
+        this.inventory = inventory;
+        this.location = location;
+    }
+    // Player Constructor
+    public Character(String name, int health, int damage, int shield, List<String> inventory, Location location) {
         super(name);
         this.health = health;
         this.damage = damage;
         this.shield = shield;
         this.inventory = inventory;
+        this.location = location;
+    }
+
+    // Enemy Constructor
+    public Character(String name, String description, int health, int damage, int shield, Location location) {
+        super(name, description);
+        this.health = health;
+        this.damage = damage;
+        this.shield = shield;
         this.location = location;
     }
 
@@ -66,14 +80,14 @@ public class Player extends Character {
 
     @Override
     public String toString() {
-        return "Player{" +
-                "name='" + name + '\'' +
-                ", health=" + health +
+        return "Character{" +
+                "health=" + health +
                 ", damage=" + damage +
                 ", shield=" + shield +
                 ", inventory=" + inventory +
                 ", location=" + location +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
-
 }

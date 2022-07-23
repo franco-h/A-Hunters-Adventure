@@ -1,6 +1,6 @@
 package com.huntersadventure.client;
 
-import com.huntersadventure.controller.GameLogic;
+import com.huntersadventure.game.GameLogic;
 
 import java.io.IOException;
 

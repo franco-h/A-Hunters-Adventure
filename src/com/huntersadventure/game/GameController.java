@@ -1,6 +1,11 @@
-package com.huntersadventure.controller;
+package com.huntersadventure.game;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.huntersadventure.gameobjects.Location;
+import com.huntersadventure.jsonparser.Json;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -11,7 +16,27 @@ import java.util.List;
  * Character Controller not yet in use. Below contains just an example.
  */
 
-public class CharacterController {
+public class GameController {
+
+    List<Location> map = new ArrayList<>();
+
+    public void generateMap() throws IOException {
+        JsonNode gtNode = Json.parse(new File("lib/locations/guardtower.json"));
+        JsonNode tgNode = Json.parse(new File("lib/locations/towngate.json"));
+        JsonNode bsNode = Json.parse(new File("lib/locations/blacksmith.json"));
+        JsonNode ahNode = Json.parse(new File("lib/locations/abandonedhouse.json"));
+
+        Location guardTower = Json.fromJson(gtNode, Location.class);
+        Location blackSmith = Json.fromJson(bsNode, Location.class);
+        Location abandonedHouse = Json.fromJson(ahNode, Location.class);
+        Location townGate = Json.fromJson(tgNode, Location.class);
+
+        map.add(townGate);
+        map.add(blackSmith);
+        map.add(guardTower);
+        map.add(abandonedHouse);
+    }
+
 
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
@@ -26,12 +51,16 @@ public class CharacterController {
 
     // TODO: Retrieve items from JSON file and store in a list.
     // Items in the room or from NPCs
-    List<String> items = new ArrayList<>(Arrays.asList("Item", "Item", "Item"));
+    List<Location> items = new ArrayList<>();
+
+    public GameController() throws IOException {
+    }
 
     public void startGame() throws IOException {
         System.out.println("Welcome to the game!");
         // run help() to get a list of commands
         help();
+        generateMap();
         String input;
         String output;
 

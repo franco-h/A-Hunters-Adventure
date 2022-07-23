@@ -1,8 +1,5 @@
 {
 "name": "Guard Tower",
 "description": "A tower watching over the city",
-"items":["badge", "map"],
-"east": "BlackSmith",
-"west": "Abandoned House",
-"south": "Gate"
+"items":["badge"]
 }

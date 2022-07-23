@@ -1,11 +1,8 @@
-package com.huntersadventure.controller;
-
-import com.huntersadventure.controller.CharacterController;
+package com.huntersadventure.game;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Scanner;
 
 
 /*
@@ -43,7 +40,7 @@ public class GameLogic {
 
     public static void startGame() throws IOException {
         System.out.println("Do you wish to start the game? y/n");
-        CharacterController controller = new CharacterController();
+        GameController controller = new GameController();
 
         String input = in.readLine();
         if (input.equals("y")) {
