@@ -1,6 +1,7 @@
 package com.huntersadventure.client;
 
 import com.huntersadventure.game.GameController;
+import com.huntersadventure.game.TestController;
 
 import java.io.IOException;
 
@@ -10,7 +11,10 @@ public class Main {
 
         try {
             GameController gameController = new GameController();
-            gameController.startPrompt();
+            gameController.run();
+//            TestController testController = new TestController();
+//
+//            testController.run();
         } catch (IOException e) {
             e.printStackTrace();
         }

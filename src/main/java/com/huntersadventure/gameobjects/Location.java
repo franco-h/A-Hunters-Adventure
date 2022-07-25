@@ -24,9 +24,9 @@ public class Location extends Prop {
 
     @Override
     public String toString() {
-        return "Location{" +
-                "items=" + items +
-                ", name='" + name + '\'' +
+        return "Location: " +
+                "name='" + name +
+                ", items=" + items +'\'' +
                 ", description='" + description + '\'' +
                 '}';
     }

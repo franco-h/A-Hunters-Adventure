@@ -17,11 +17,13 @@ import java.util.List;
  * Character Controller not yet in use. Below contains just an example.
  */
 
-public class GameController {
+public class TestController {
 
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
     Characters p1 = new Characters();
+
     List<Location> townMap = new ArrayList<>();
+
 
     List<String> commands = new ArrayList<>(Arrays.asList(
             "look", "help", "quit"));
@@ -35,9 +37,6 @@ public class GameController {
     // TODO: Retrieve items from JSON file and store in a list.
     // Items in the room or from NPCs
     List<Location> items = new ArrayList<>();
-
-    public GameController() throws IOException {
-    }
 
     public void run() throws IOException {
         generateMap();
@@ -64,9 +63,6 @@ public class GameController {
         System.out.println(townMap);
     }
 
-    /**
-     * Create Player still in progress
-     */
     public void createPlayer(List<Location> map) throws IOException {
         List<String> startInv = new ArrayList<>();
         System.out.println("What is your name?");
@@ -80,36 +76,37 @@ public class GameController {
     }
 
     public void startPrompt() throws IOException {
-        boolean keepGoing = true;
-        while (keepGoing) {
-            System.out.println("Welcome to the Hunter's Adventure!");
-            System.out.println("Do you want to see the instructions? (y/n)");
-            String input = in.readLine();
-            if (input.equals("y")) {
-                System.out.println("----------THE STORY SO FAR----------");
-                System.out.println("For eons humanity itself has been under attack from malevolent entities, vicious creatures, and the very forces of evil itself. Once nearly wiped out from existence,\n" +
-                        "they were saved from extinction by the actions of other brave humans that not only stood against these evils, but actively searched for it in order to destroy it. \n" +
-                        "These hunters have remained steadfast in their defiance over centuries, however evil never rests. \n" +
-                        "You are one of these hunters.\n\n" +
-                        "After tracking a particularly vicious creature, you find yourself in an unfamiliar town, plagued with a recent string of brutal attacks and mysterious vanishings.\n" +
-                        "Determined to find a link to the prey you're hunting, you decide to stay at the local inn, only to find yourself stuck as the town guards shut the gates, \n" +
-                        "blocking off entry or exit from any visitors or residents. Determined to end its reign of terror, it is up to you to find items, weapons, and \n" +
-                        "eventually destroy the creature that's been terrorizing the local town - whatever the cost...");
-                System.out.println("--------------------");
-            } else if (input.equals("n")) {
-                keepGoing = false;
-            } else {
-                System.out.println("Invalid input. Please try again.");
-            }
+        System.out.println("Welcome to the Hunter's Adventure!");
+        System.out.println("Do you want to see the instructions? (y/n)");
+        String input = in.readLine();
+        if (input.equals("y")) {
+            System.out.println("----------THE STORY SO FAR----------");
+            System.out.println("For eons humanity itself has been under attack from malevolent entities, vicious creatures, and the very forces of evil itself. Once nearly wiped out from existence,\n" +
+                    "they were saved from extinction by the actions of other brave humans that not only stood against these evils, but actively searched for it in order to destroy it. \n" +
+                    "These hunters have remained steadfast in their defiance over centuries, however evil never rests. \n" +
+                    "You are one of these hunters.\n\n" +
+                    "After tracking a particularly vicious creature, you find yourself in an unfamiliar town, plagued with a recent string of brutal attacks and mysterious vanishings.\n" +
+                    "Determined to find a link to the prey you're hunting, you decide to stay at the local inn, only to find yourself stuck as the town guards shut the gates, \n" +
+                    "blocking off entry or exit from any visitors or residents. Determined to end its reign of terror, it is up to you to find items, weapons, and \n" +
+                    "eventually destroy the creature that's been terrorizing the local town - whatever the cost...");
+            System.out.println("--------------------");
+            startGame();
+        } else if (input.equals("n")) {
+            startGame();
+        } else {
+            System.out.println("Invalid input. Please try again.");
+            startPrompt();
         }
     }
 
     public void startGame() throws IOException {
-        System.out.println("Welcome to the game!");
+        System.out.println("Welcome to the game! " + p1.getName());
+        System.out.println(p1);
         // run help() to get a list of commands
         help();
-        String output;
         String input;
+        String output;
+
         // Prompt for input until the user enters "quit". If the user enters quit, the game will exit.
         do {
             System.out.println("Enter a command below.");
@@ -117,7 +114,7 @@ public class GameController {
             input = in.readLine();
             output = runCommand(input);
             System.out.println(output);
-        } while (!input.equals("quit"));
+        } while (!(input = in.readLine()).equals("quit"));
     }
 
     private void help() {
@@ -190,6 +187,8 @@ public class GameController {
                     help();
                     break;
                 case "quit":
+                    // Back to Main.java
+                    startPrompt();
                     break;
                 case "look":
                     // TODO: Read description of the room and items available.
