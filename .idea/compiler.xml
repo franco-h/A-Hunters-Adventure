@@ -11,4 +11,9 @@
       </profile>
     </annotationProcessing>
   </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Team3_RPG" options="--add-exports java.base/jdk.internal.module=ALL-UNNAMED" />
+    </option>
+  </component>
 </project>

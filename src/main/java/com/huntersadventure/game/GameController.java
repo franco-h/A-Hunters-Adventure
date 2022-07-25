@@ -48,12 +48,28 @@ public class GameController {
                     "blocking off entry or exit from any visitors or residents. Determined to end its reign of terror, it is up to you to find items, weapons, and \n" +
                     "eventually destroy the creature that's been terrorizing the local town - whatever the cost...");
             System.out.println("--------------------");
-            startGame();
+            startMenu();
         } else if (input.equals("n")) {
-            startGame();
+            startMenu();
         } else {
             System.out.println("Invalid input. Please try again.");
             startPrompt();
+        }
+    }
+
+    public static void startMenu() throws IOException {
+        System.out.println("Do you wish to start the game? y/n");
+        GameController controller = new GameController();
+
+        String input = in.readLine();
+        if (input.equals("y")) {
+            controller.startGame();
+        } else if (input.equals("n")) {
+            System.out.println("Thank you for playing!");
+            System.exit(0);
+        } else {
+            System.out.println("Invalid input. Please try again.");
+            startMenu();
         }
     }
 
