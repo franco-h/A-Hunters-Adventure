@@ -1,15 +1,16 @@
 package com.huntersadventure.client;
 
-import com.huntersadventure.controller.GameLogic;
+import com.huntersadventure.game.GameController;
 
 import java.io.IOException;
 
-public class Main extends GameLogic {
+// Main Class should not extend another class.
+public class Main {
     public static void main(String[] args) {
-        welcomeBanner();  //ASCII art will be read in from text when resources folder is created
 
         try {
-            startPrompt();  //Start prompt is very basic right now, not final version
+            GameController gameController = new GameController();
+            gameController.startPrompt();
         } catch (IOException e) {
             e.printStackTrace();
         }

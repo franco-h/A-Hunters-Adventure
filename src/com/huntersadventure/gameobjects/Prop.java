@@ -1,14 +1,18 @@
-package com.huntersadventure.model;
+package com.huntersadventure.gameobjects;
 
-public class Item {
+public class Prop {
 
     String name;
     String description;
 
-    public Item() {
+    public Prop() {
     }
 
-    public Item(String name, String description) {
+    public Prop(String name) {
+        this.name = name;
+    }
+
+    public Prop(String name, String description) {
         this.name = name;
         this.description = description;
     }
@@ -28,4 +32,6 @@ public class Item {
     public void setDescription(String description) {
         this.description = description;
     }
+
+
 }

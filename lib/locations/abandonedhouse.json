@@ -1,8 +1,5 @@
 {
 "name": "Abandoned House",
 "description": "A tower watching over the city",
-"items": ["potion","mystery box"],
-"north": "BlackSmith",
-"west": "Abandoned House",
-"south": "Gate"
+"items": ["potion","mystery box"]
 }

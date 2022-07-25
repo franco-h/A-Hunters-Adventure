@@ -1,7 +1,5 @@
 {
 "name": "Blacksmith",
 "description": "Get weapons here!",
-"items": ["silver arrows"],
-"west": "Guard Tower",
-"south": ""
+"items": ["silver arrows"]
 }
