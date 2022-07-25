@@ -35,6 +35,29 @@ public class GameController {
 
     public GameController() throws IOException {
     }
+    public void startPrompt() throws IOException {
+        System.out.println("Welcome to the Hunter's Adventure!");
+        System.out.println("Do you want to see the instructions? (y/n)");
+        String input = in.readLine();
+        if (input.equals("y")) {
+            System.out.println("----------THE STORY SO FAR----------");
+            System.out.println("For eons humanity itself has been under attack from malevolent entities, vicious creatures, and the very forces of evil itself. Once nearly wiped out from existence,\n" +
+                    "they were saved from extinction by the actions of other brave humans that not only stood against these evils, but actively searched for it in order to destroy it. \n" +
+                    "These hunters have remained steadfast in their defiance over centuries, however evil never rests. \n" +
+                    "You are one of these hunters.\n\n" +
+                    "After tracking a particularly vicious creature, you find yourself in an unfamiliar town, plagued with a recent string of brutal attacks and mysterious vanishings.\n" +
+                    "Determined to find a link to the prey you're hunting, you decide to stay at the local inn, only to find yourself stuck as the town guards shut the gates, \n" +
+                    "blocking off entry or exit from any visitors or residents. Determined to end its reign of terror, it is up to you to find items, weapons, and \n" +
+                    "eventually destroy the creature that's been terrorizing the local town - whatever the cost...");
+            System.out.println("--------------------");
+            startGame();
+        } else if (input.equals("n")) {
+            startGame();
+        } else {
+            System.out.println("Invalid input. Please try again.");
+            startPrompt();
+        }
+    }
 
     public void startGame() throws IOException {
         System.out.println("Welcome to the game!");
@@ -63,6 +86,10 @@ public class GameController {
         System.out.println("-----------------------------------------------------");
     }
 
+    /**
+     * Fixes any case(toLowerCase()) or whitespace(trim()) issues
+     * Checks for valid user input
+     */
     public String runCommand(String inputString) throws IOException {
         List<String> userInputs;
         String output = "ok";
@@ -76,6 +103,7 @@ public class GameController {
         return output;
     }
 
+
     private static List<String> userInputs(String lowerCaseInput) {
         String delims = "[ \t,.:;?!\"']+";
         String[] words = lowerCaseInput.split(delims);
@@ -84,6 +112,10 @@ public class GameController {
         return strlist;
     }
 
+    /**
+     * parseCommand checks wordlist size and calls processSingleCommand,
+     * processTwoCommand or lets user know their wordlist is invalid
+     */
     private String parseCommand(List<String> wordlist) throws IOException {
         String message;
         if (wordlist.size () == 1) {
@@ -96,6 +128,11 @@ public class GameController {
         return message;
     }
 
+
+    /**
+     * processSingleCommand takes in an input as a List
+     * and checks String 0 for keywords allowed in List<String> commands
+     */
     private String processSingleCommand(List<String> wordlist) throws IOException {
         String commandOne;
         String message = "";
@@ -110,7 +147,7 @@ public class GameController {
                     break;
                 case "quit":
                     // Back to Main.java
-                    GameLogic.startPrompt();
+                    startPrompt();
                     break;
                 case "look":
                     // TODO: Read description of the room and items available.
@@ -124,6 +161,10 @@ public class GameController {
         return message;
     }
 
+    /**
+     * processTwoCommand takes in two word input as a List
+     * and checks String 0 and 1 for prep command and location
+     */
     private String processTwoCommand(List<String> wordlist) {
         String commandOne;
         String commandTwo;
@@ -164,6 +205,37 @@ public class GameController {
         }
         return message;
     }
+
+    public void clearCons() {
+        for (int i = 0; i < 100; i++)
+            System.out.println();
+    }
+
+    public void printBreak(int n) {
+        for (int i = 0; i < n; i++)
+            System.out.println("-");
+        System.out.println();
+    }
+
+
+/**
+ * Change banner to be read in
+ */
+
+//    public void welcomeBanner(){
+//        System.out.println("                                                                                                                                                                                   \n" +
+//                " @@@@@@      @@@  @@@  @@@  @@@  @@@  @@@  @@@@@@@  @@@@@@@@  @@@@@@@   @@@   @@@@@@       @@@@@@   @@@@@@@   @@@  @@@  @@@@@@@@  @@@  @@@  @@@@@@@  @@@  @@@  @@@@@@@   @@@@@@@@  \n" +
+//                "@@@@@@@@     @@@  @@@  @@@  @@@  @@@@ @@@  @@@@@@@  @@@@@@@@  @@@@@@@@   @@  @@@@@@@      @@@@@@@@  @@@@@@@@  @@@  @@@  @@@@@@@@  @@@@ @@@  @@@@@@@  @@@  @@@  @@@@@@@@  @@@@@@@@  \n" +
+//                "@@!  @@@     @@!  @@@  @@!  @@@  @@!@!@@@    @@!    @@!       @@!  @@@  @!   !@@          @@!  @@@  @@!  @@@  @@!  @@@  @@!       @@!@!@@@    @@!    @@!  @@@  @@!  @@@  @@!       \n" +
+//                "!@!  @!@     !@!  @!@  !@!  @!@  !@!!@!@!    !@!    !@!       !@!  @!@       !@!          !@!  @!@  !@!  @!@  !@!  @!@  !@!       !@!!@!@!    !@!    !@!  @!@  !@!  @!@  !@!       \n" +
+//                "@!@!@!@!     @!@!@!@!  @!@  !@!  @!@ !!@!    @!!    @!!!:!    @!@!!@!        !!@@!!       @!@!@!@!  @!@  !@!  @!@  !@!  @!!!:!    @!@ !!@!    @!!    @!@  !@!  @!@!!@!   @!!!:!    \n" +
+//                "!!!@!!!!     !!!@!!!!  !@!  !!!  !@!  !!!    !!!    !!!!!:    !!@!@!          !!@!!!      !!!@!!!!  !@!  !!!  !@!  !!!  !!!!!:    !@!  !!!    !!!    !@!  !!!  !!@!@!    !!!!!:    \n" +
+//                "!!:  !!!     !!:  !!!  !!:  !!!  !!:  !!!    !!:    !!:       !!: :!!             !:!     !!:  !!!  !!:  !!!  :!:  !!:  !!:       !!:  !!!    !!:    !!:  !!!  !!: :!!   !!:       \n" +
+//                ":!:  !:!     :!:  !:!  :!:  !:!  :!:  !:!    :!:    :!:       :!:  !:!           !:!      :!:  !:!  :!:  !:!   ::!!:!   :!:       :!:  !:!    :!:    :!:  !:!  :!:  !:!  :!:       \n" +
+//                "::   :::     ::   :::  ::::: ::   ::   ::     ::     :: ::::  ::   :::       :::: ::      ::   :::   :::: ::    ::::     :: ::::   ::   ::     ::    ::::: ::  ::   :::   :: ::::  \n" +
+//                " :   : :      :   : :   : :  :   ::    :      :     : :: ::    :   : :       :: : :        :   : :  :: :  :      :      : :: ::   ::    :      :      : :  :    :   : :  : :: ::   \n" +
+//                "                                                                                                                                                                                   ");
+//    }
 }
 
 //    List<Location> map = new ArrayList<>();
