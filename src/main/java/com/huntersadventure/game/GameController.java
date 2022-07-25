@@ -1,8 +1,12 @@
 package com.huntersadventure.game;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.huntersadventure.gameobjects.Characters;
 import com.huntersadventure.gameobjects.Location;
+import com.huntersadventure.jsonparser.Json;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -16,6 +20,8 @@ import java.util.List;
 public class GameController {
 
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+    Characters p1 = new Characters();
+    List<Location> townMap = new ArrayList<>();
 
     List<String> commands = new ArrayList<>(Arrays.asList(
             "look", "help", "quit"));
@@ -33,27 +39,68 @@ public class GameController {
     public GameController() throws IOException {
     }
 
+    public void run() throws IOException {
+        generateMap();
+        createPlayer(townMap);
+        startPrompt();
+        startGame();
+    }
+
+    public void generateMap() throws IOException {
+        JsonNode gtNode = Json.parse(new File("src/main/resources/locations/guardtower.json"));
+        JsonNode tgNode = Json.parse(new File("src/main/resources/locations/towngate.json"));
+        JsonNode bsNode = Json.parse(new File("src/main/resources/locations/blacksmith.json"));
+        JsonNode ahNode = Json.parse(new File("src/main/resources/locations/abandonedhouse.json"));
+
+        Location guardTower = Json.fromJson(gtNode, Location.class);
+        Location blackSmith = Json.fromJson(bsNode, Location.class);
+        Location abandonedHouse = Json.fromJson(ahNode, Location.class);
+        Location townGate = Json.fromJson(tgNode, Location.class);
+
+        townMap.add(townGate);
+        townMap.add(blackSmith);
+        townMap.add(guardTower);
+        townMap.add(abandonedHouse);
+        System.out.println(townMap);
+    }
+
+    /**
+     * Create Player still in progress
+     */
+    public void createPlayer(List<Location> map) throws IOException {
+        List<String> startInv = new ArrayList<>();
+        System.out.println("What is your name?");
+        String name = in.readLine();
+        p1.setName(name);
+        p1.setHealth(10);
+        p1.setDamage(10);
+        p1.setShield(10);
+        p1.setInventory(startInv);
+        p1.setLocation(map.get(0));
+    }
+
     public void startPrompt() throws IOException {
-        System.out.println("Welcome to the Hunter's Adventure!");
-        System.out.println("Do you want to see the instructions? (y/n)");
-        String input = in.readLine();
-        if (input.equals("y")) {
-            System.out.println("----------THE STORY SO FAR----------");
-            System.out.println("For eons humanity itself has been under attack from malevolent entities, vicious creatures, and the very forces of evil itself. Once nearly wiped out from existence,\n" +
-                    "they were saved from extinction by the actions of other brave humans that not only stood against these evils, but actively searched for it in order to destroy it. \n" +
-                    "These hunters have remained steadfast in their defiance over centuries, however evil never rests. \n" +
-                    "You are one of these hunters.\n\n" +
-                    "After tracking a particularly vicious creature, you find yourself in an unfamiliar town, plagued with a recent string of brutal attacks and mysterious vanishings.\n" +
-                    "Determined to find a link to the prey you're hunting, you decide to stay at the local inn, only to find yourself stuck as the town guards shut the gates, \n" +
-                    "blocking off entry or exit from any visitors or residents. Determined to end its reign of terror, it is up to you to find items, weapons, and \n" +
-                    "eventually destroy the creature that's been terrorizing the local town - whatever the cost...");
-            System.out.println("--------------------");
-            startGame();
-        } else if (input.equals("n")) {
-            startGame();
-        } else {
-            System.out.println("Invalid input. Please try again.");
-            startPrompt();
+        boolean keepGoing = true;
+        while (keepGoing) {
+            System.out.println("Welcome to the Hunter's Adventure!");
+            System.out.println("Do you want to see the instructions? (y/n)");
+            String input = in.readLine();
+            if (input.equals("y")) {
+                System.out.println("----------THE STORY SO FAR----------");
+                System.out.println("For eons humanity itself has been under attack from malevolent entities, vicious creatures, and the very forces of evil itself. Once nearly wiped out from existence,\n" +
+                        "they were saved from extinction by the actions of other brave humans that not only stood against these evils, but actively searched for it in order to destroy it. \n" +
+                        "These hunters have remained steadfast in their defiance over centuries, however evil never rests. \n" +
+                        "You are one of these hunters.\n\n" +
+                        "After tracking a particularly vicious creature, you find yourself in an unfamiliar town, plagued with a recent string of brutal attacks and mysterious vanishings.\n" +
+                        "Determined to find a link to the prey you're hunting, you decide to stay at the local inn, only to find yourself stuck as the town guards shut the gates, \n" +
+                        "blocking off entry or exit from any visitors or residents. Determined to end its reign of terror, it is up to you to find items, weapons, and \n" +
+                        "eventually destroy the creature that's been terrorizing the local town - whatever the cost...");
+                System.out.println("--------------------");
+            } else if (input.equals("n")) {
+                keepGoing = false;
+            } else {
+                System.out.println("Invalid input. Please try again.");
+            }
         }
     }
 
@@ -61,9 +108,8 @@ public class GameController {
         System.out.println("Welcome to the game!");
         // run help() to get a list of commands
         help();
-        String input;
         String output;
-
+        String input;
         // Prompt for input until the user enters "quit". If the user enters quit, the game will exit.
         do {
             System.out.println("Enter a command below.");
@@ -71,7 +117,7 @@ public class GameController {
             input = in.readLine();
             output = runCommand(input);
             System.out.println(output);
-        } while (!(input = in.readLine()).equals("quit"));
+        } while (!input.equals("quit"));
     }
 
     private void help() {
@@ -144,8 +190,6 @@ public class GameController {
                     help();
                     break;
                 case "quit":
-                    // Back to Main.java
-                    startPrompt();
                     break;
                 case "look":
                     // TODO: Read description of the room and items available.

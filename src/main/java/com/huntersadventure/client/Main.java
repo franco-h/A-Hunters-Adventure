@@ -10,7 +10,7 @@ public class Main {
 
         try {
             GameController gameController = new GameController();
-            gameController.startPrompt();
+            gameController.run();
         } catch (IOException e) {
             e.printStackTrace();
         }
