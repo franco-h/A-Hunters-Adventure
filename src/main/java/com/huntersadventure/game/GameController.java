@@ -1,11 +1,8 @@
 package com.huntersadventure.game;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.huntersadventure.gameobjects.Location;
-import com.huntersadventure.jsonparser.Json;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -35,6 +32,7 @@ public class GameController {
 
     public GameController() throws IOException {
     }
+
     public void startPrompt() throws IOException {
         System.out.println("Welcome to the Hunter's Adventure!");
         System.out.println("Do you want to see the instructions? (y/n)");
