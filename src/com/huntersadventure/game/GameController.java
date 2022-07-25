@@ -18,26 +18,6 @@ import java.util.List;
 
 public class GameController {
 
-    List<Location> map = new ArrayList<>();
-
-    public void generateMap() throws IOException {
-        JsonNode gtNode = Json.parse(new File("lib/locations/guardtower.json"));
-        JsonNode tgNode = Json.parse(new File("lib/locations/towngate.json"));
-        JsonNode bsNode = Json.parse(new File("lib/locations/blacksmith.json"));
-        JsonNode ahNode = Json.parse(new File("lib/locations/abandonedhouse.json"));
-
-        Location guardTower = Json.fromJson(gtNode, Location.class);
-        Location blackSmith = Json.fromJson(bsNode, Location.class);
-        Location abandonedHouse = Json.fromJson(ahNode, Location.class);
-        Location townGate = Json.fromJson(tgNode, Location.class);
-
-        map.add(townGate);
-        map.add(blackSmith);
-        map.add(guardTower);
-        map.add(abandonedHouse);
-    }
-
-
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
     List<String> commands = new ArrayList<>(Arrays.asList(
@@ -60,7 +40,6 @@ public class GameController {
         System.out.println("Welcome to the game!");
         // run help() to get a list of commands
         help();
-        generateMap();
         String input;
         String output;
 
@@ -187,41 +166,21 @@ public class GameController {
     }
 }
 
-//        try {
-//            JsonNode gtNode = Json.parse(new File("lib/locations/guardtower.json"));
-//            JsonNode bsNode = Json.parse(new File("lib/locations/blacksmith.json"));
-//            JsonNode ahNode = Json.parse(new File("lib/locations/abandonedhouse.json"));
+//    List<Location> map = new ArrayList<>();
 //
-//            Location guardTower = Json.fromJson(gtNode, Location.class);
-//            Location blackSmith = Json.fromJson(bsNode, Location.class);
-//            Location abandonedHouse = Json.fromJson(ahNode, Location.class);
+//    public void generateMap() throws IOException {
+//        JsonNode gtNode = Json.parse(new File("lib/locations/guardtower.json"));
+//        JsonNode tgNode = Json.parse(new File("lib/locations/towngate.json"));
+//        JsonNode bsNode = Json.parse(new File("lib/locations/blacksmith.json"));
+//        JsonNode ahNode = Json.parse(new File("lib/locations/abandonedhouse.json"));
 //
-//            JsonNode playerNode = Json.parse(new File("lib/characters/player.json"));
-//            Player player = Json.fromJson(playerNode, Player.class);
+//        Location guardTower = Json.fromJson(gtNode, Location.class);
+//        Location blackSmith = Json.fromJson(bsNode, Location.class);
+//        Location abandonedHouse = Json.fromJson(ahNode, Location.class);
+//        Location townGate = Json.fromJson(tgNode, Location.class);
 //
-//            System.out.println(guardTower);
-//            System.out.println(player);
-//            player.setLocation(guardTower);
-//
-//            String gtItem = guardTower.getItems().get(1);
-//            System.out.println(gtItem);
-//
-//
-//            player.getInventory().add(gtItem);
-//            if (player.getInventory().contains(gtItem)) {
-//                guardTower.getItems().remove(1);
-//            }
-//            System.out.println();
-//            System.out.println(guardTower);
-//            System.out.println(blackSmith);
-//            System.out.println(abandonedHouse);
-//            System.out.println();
-//            System.out.println(player);
-//            System.out.println(player.getLocation());
-//
-//
-//
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+//        map.add(townGate);
+//        map.add(blackSmith);
+//        map.add(guardTower);
+//        map.add(abandonedHouse);
+//    }
