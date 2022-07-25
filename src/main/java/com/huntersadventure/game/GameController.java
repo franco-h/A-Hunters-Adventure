@@ -192,8 +192,11 @@ public class GameController {
                 case "quit":
                     break;
                 case "look":
-                    // TODO: Read description of the room and items available.
-                    message = "look()";
+
+                    message = "You are in the " + p1.getLocation().getName() + ". This is the " +
+                            p1.getLocation().getDescription() + ".\n" +
+                            "Items available: " + p1.getLocation().getItems();
+
                     break;
                 default:
                     message = commandOne + " (not yet implemented)";
