@@ -219,13 +219,13 @@ public class GameController {
         // TODO: Implement player's function to move between rooms
         if (commandOne.equals("go")) {
             if (commandTwo.equals("north")) {
-                return "You go north.";
+                message = "You go north.";
             } else if (commandTwo.equals("south")) {
-                return "You go south.";
+                message = "You go south.";
             } else if (commandTwo.equals("west")) {
-                return "You go west.";
+                message = "You go west.";
             } else if (commandTwo.equals("east")) {
-                return "You go east.";
+                message = "You go east.";
             } else {
                 message = "Invalid direction.";
             }
