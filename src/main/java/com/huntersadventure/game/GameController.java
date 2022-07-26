@@ -73,7 +73,6 @@ public class GameController {
         townMap.add(abandonedHouse);
         // Location index: 4
         townMap.add(townGate);
-        System.out.println(townMap);
     }
 
 
