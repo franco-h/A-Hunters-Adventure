@@ -11,7 +11,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Character Controller not yet in use. Below contains just an example.
@@ -22,6 +24,7 @@ public class GameController {
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
     Characters p1 = new Characters();
     List<Location> townMap = new ArrayList<>();
+    ArrayList<String> playerInventory = new ArrayList<>();
 
     List<String> commands = new ArrayList<>(Arrays.asList(
             "look", "help", "quit"));
@@ -63,6 +66,7 @@ public class GameController {
         townMap.add(abandonedHouse);
         System.out.println(townMap);
     }
+
 
     /**
      * Create Player still in progress
@@ -128,6 +132,7 @@ public class GameController {
         System.out.println("help - display commands available");
         System.out.println("quit - exit the game and return to menu");
         System.out.println("-----------------------------------------------------");
+        System.out.println("-----------------------------------------------------");
     }
 
     /**
@@ -155,6 +160,7 @@ public class GameController {
         List<String> strlist = new ArrayList<>(Arrays.asList(words));
         return strlist;
     }
+
 
     /**
      * parseCommand checks wordlist size and calls processSingleCommand,
@@ -243,12 +249,20 @@ public class GameController {
         }
 
         // TODO: Testing p1.item
-        if (commandOne.equals("get")) {
-            if (p1.getLocation().getItems().contains(commandTwo)) {
-                return "You pick up the " + commandTwo + ".";
-            } else {
-                message = "There is no " + commandTwo + " here.";
-            }
+            if (commandOne.equals("get")) {
+                if (p1.getLocation().getItems().contains(commandTwo)) {
+                    p1.setInventory(Collections.singletonList(commandTwo));
+                    p1.getLocation().setItems(p1.getLocation().getItems().stream()
+                            .filter(item -> !item.equals(commandTwo))
+                            .collect(Collectors.toList()));
+
+                    System.out.println(p1.getInventory());
+                    return "You pick up the " + commandTwo + ".";
+                }
+                else {
+                    message = "There is no " + commandTwo + " here.";
+                }
+
         } else if (commandOne.equals("use")) {
             if (items.contains(commandTwo)) {
                 return "You use the " + commandTwo + ".";
