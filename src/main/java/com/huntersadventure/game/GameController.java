@@ -165,13 +165,21 @@ public class GameController {
         if (wordlist.size () == 1) {
             message = processSingleCommand(wordlist);
         } else if (wordlist .size () == 2) {
+            if (wordlist.get(0).equals("grab") || wordlist.get(0).equals("take")) {
+                wordlist.set(0, "get");
+            }
+            message = processTwoCommand(wordlist);
+        } else if (wordlist.size() == 3) {
+            if (wordlist.get(0).equals("pick") && wordlist.get(1).equals("up")) {
+                wordlist.set(0, "get");
+                wordlist.set(1, wordlist.get(2));
+            }
             message = processTwoCommand(wordlist);
         } else {
             message = "Invalid command.";
         }
         return message;
     }
-
 
     /**
      * processSingleCommand takes in an input as a List
@@ -234,9 +242,9 @@ public class GameController {
             }
         }
 
-        // TODO: Implement player's function to get or use items
+        // TODO: Testing p1.item
         if (commandOne.equals("get")) {
-            if (items.contains(commandTwo)) {
+            if (p1.getLocation().getItems().contains(commandTwo)) {
                 return "You pick up the " + commandTwo + ".";
             } else {
                 message = "There is no " + commandTwo + " here.";
