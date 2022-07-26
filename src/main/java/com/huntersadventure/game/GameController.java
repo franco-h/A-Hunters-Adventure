@@ -11,7 +11,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Character Controller not yet in use. Below contains just an example.
@@ -22,6 +24,7 @@ public class GameController {
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
     Characters p1 = new Characters();
     List<Location> townMap = new ArrayList<>();
+    ArrayList<String> playerInventory = new ArrayList<>();
 
     List<String> commands = new ArrayList<>(Arrays.asList(
             "look", "help", "quit"));
@@ -63,6 +66,7 @@ public class GameController {
         townMap.add(abandonedHouse);
         System.out.println(townMap);
     }
+
 
     /**
      * Create Player still in progress
@@ -128,6 +132,7 @@ public class GameController {
         System.out.println("help - display commands available");
         System.out.println("quit - exit the game and return to menu");
         System.out.println("-----------------------------------------------------");
+        System.out.println("-----------------------------------------------------");
     }
 
     /**
@@ -156,6 +161,7 @@ public class GameController {
         return strlist;
     }
 
+
     /**
      * parseCommand checks wordlist size and calls processSingleCommand,
      * processTwoCommand or lets user know their wordlist is invalid
@@ -165,13 +171,21 @@ public class GameController {
         if (wordlist.size () == 1) {
             message = processSingleCommand(wordlist);
         } else if (wordlist .size () == 2) {
+            if (wordlist.get(0).equals("grab") || wordlist.get(0).equals("take")) {
+                wordlist.set(0, "get");
+            }
+            message = processTwoCommand(wordlist);
+        } else if (wordlist.size() == 3) {
+            if (wordlist.get(0).equals("pick") && wordlist.get(1).equals("up")) {
+                wordlist.set(0, "get");
+                wordlist.set(1, wordlist.get(2));
+            }
             message = processTwoCommand(wordlist);
         } else {
             message = "Invalid command.";
         }
         return message;
     }
-
 
     /**
      * processSingleCommand takes in an input as a List
@@ -192,8 +206,11 @@ public class GameController {
                 case "quit":
                     break;
                 case "look":
-                    // TODO: Read description of the room and items available.
-                    message = "look()";
+
+                    message = "You are in the " + p1.getLocation().getName() + ". This is the " +
+                            p1.getLocation().getDescription() + ".\n" +
+                            "Items available: " + p1.getLocation().getItems();
+
                     break;
                 default:
                     message = commandOne + " (not yet implemented)";
@@ -231,13 +248,21 @@ public class GameController {
             }
         }
 
-        // TODO: Implement player's function to get or use items
-        if (commandOne.equals("get")) {
-            if (items.contains(commandTwo)) {
-                return "You pick up the " + commandTwo + ".";
-            } else {
-                message = "There is no " + commandTwo + " here.";
-            }
+        // TODO: Testing p1.item
+            if (commandOne.equals("get")) {
+                if (p1.getLocation().getItems().contains(commandTwo)) {
+                    p1.setInventory(Collections.singletonList(commandTwo));
+                    p1.getLocation().setItems(p1.getLocation().getItems().stream()
+                            .filter(item -> !item.equals(commandTwo))
+                            .collect(Collectors.toList()));
+
+                    System.out.println(p1.getInventory());
+                    return "You pick up the " + commandTwo + ".";
+                }
+                else {
+                    message = "There is no " + commandTwo + " here.";
+                }
+
         } else if (commandOne.equals("use")) {
             if (items.contains(commandTwo)) {
                 return "You use the " + commandTwo + ".";
