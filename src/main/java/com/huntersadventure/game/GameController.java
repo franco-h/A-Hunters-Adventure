@@ -245,16 +245,16 @@ public class GameController {
         // TODO: Implement player's function to move between rooms
         if (commandOne.equals("go")) {
             if (commandTwo.equals("north")) {
-                goN();
+                goNorth();
                 message = "Your current location is the " + p1.getLocation().getName();
             } else if (commandTwo.equals("south")) {
-                goS();
+                goSouth();
                 message = "Your current location is the " + p1.getLocation().getName();
             } else if (commandTwo.equals("west")) {
-                goW();
+                goWest();
                 message = "Your current location is the " + p1.getLocation().getName();
             } else if (commandTwo.equals("east")) {
-                goE();
+                goEast();
                 message = "Your current location is the " + p1.getLocation().getName();
             } else {
                 message = "Invalid direction.";
@@ -323,19 +323,19 @@ public class GameController {
         }
     }
 
-    private void goN() {
+    private void goNorth() {
         movePlayerTo(Direction.NORTH);
     }
 
-    private void goS() {
+    private void goSouth() {
         movePlayerTo(Direction.SOUTH);
     }
 
-    private void goW() {
+    private void goWest() {
         movePlayerTo(Direction.WEST);
     }
 
-    private void goE() {
+    private void goEast() {
         movePlayerTo(Direction.EAST);
     }
 
