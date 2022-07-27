@@ -1,7 +1,7 @@
 {
   "name": "Town Gate",
   "description": "Entrance and exit for town",
-  "items":["maps"],
+  "items":["map"],
   "north": 1,
   "south": -1,
   "west": -1,

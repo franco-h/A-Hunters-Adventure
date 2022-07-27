@@ -3,6 +3,7 @@ package com.huntersadventure.game;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.huntersadventure.gameobjects.Characters;
 import com.huntersadventure.gameobjects.Direction;
+import com.huntersadventure.gameobjects.Item;
 import com.huntersadventure.gameobjects.Location;
 import com.huntersadventure.jsonparser.Json;
 
@@ -25,6 +26,7 @@ public class GameController {
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
     Characters p1 = new Characters();
     List<Location> townMap = new ArrayList<>();
+    List<Item> gameItems = new ArrayList<>();
     ArrayList<String> playerInventory = new ArrayList<>();
 
     List<String> commands = new ArrayList<>(Arrays.asList(
@@ -44,10 +46,42 @@ public class GameController {
     }
 
     public void run() throws IOException {
+        generateItems();
         generateMap();
         createPlayer(townMap);
         startPrompt();
         startGame();
+    }
+
+    public void generateItems() throws IOException {
+
+        JsonNode badgeNode = Json.parse(new File("src/main/resources/items/badge.json"));
+        JsonNode silverNode = Json.parse(new File("src/main/resources/items/silverarrows.json"));
+        JsonNode boxNode = Json.parse(new File("src/main/resources/items/mysterybox.json"));
+        JsonNode potionNode = Json.parse(new File("src/main/resources/items/potion.json"));
+        JsonNode mapNode = Json.parse(new File("src/main/resources/items/map.json"));
+        JsonNode bowNode = Json.parse(new File("src/main/resources/items/bow.json"));
+        JsonNode keyNode = Json.parse(new File("src/main/resources/items/key.json"));
+        JsonNode swordNode = Json.parse(new File("src/main/resources/items/sword.json"));
+
+        Item badge = Json.fromJson(badgeNode, Item.class);
+        Item silverArrows = Json.fromJson(silverNode, Item.class);
+        Item mysteryBox = Json.fromJson(boxNode, Item.class);
+        Item potion = Json.fromJson(potionNode, Item.class);
+        Item map = Json.fromJson(mapNode, Item.class);
+        Item bow = Json.fromJson(bowNode, Item.class);
+        Item key = Json.fromJson(keyNode, Item.class);
+        Item sword = Json.fromJson(swordNode, Item.class);
+
+        gameItems.add(badge);
+        gameItems.add(silverArrows);
+        gameItems.add(mysteryBox);
+        gameItems.add(potion);
+        gameItems.add(map);
+        gameItems.add(bow);
+        gameItems.add(key);
+        gameItems.add(sword);
+        System.out.println(gameItems);
     }
 
     public void generateMap() throws IOException {
