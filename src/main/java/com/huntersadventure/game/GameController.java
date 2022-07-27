@@ -328,7 +328,6 @@ public class GameController {
         gameItems.add(bow);
         gameItems.add(key);
         gameItems.add(sword);
-        System.out.println(gameItems);
     }
 
     public void generateMap() throws IOException {
