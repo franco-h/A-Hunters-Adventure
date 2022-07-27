@@ -1,0 +1,13 @@
+{
+  "intro": [{"start": "-----THE STORY SO FAR -----"},
+    {"a": "For eons humanity itself has been under attack from malevolent entities, vicious creatures, and the very forces of evil itself. Once nearly wiped out from existence"},
+    {"b":"they were saved from extinction by the actions of other brave humans that not only stood against these evils, but actively searched for it in order to destroy it. "},
+    {"c" : "These Hunters have remained steadfast in their defiance over centuries, however evil never rests. "},
+    {"d":"You are one of these Hunters. "},
+    {"space": " "},
+    {"e": "After tracking a particularly vicious creature, you find yourself in an unfamiliar town, plagued with a recent string of brutal attacks and mysterious vanishings. "},
+    {"f":"Committed to find a link to the prey you're hunting, you decide to stay at the local inn, only to find yourself stuck as the town guards shut the gates, "},
+    {"g":"blocking off entry or exit from any visitors or residents. Determined to end its reign of terror, it is up to you to find items, weapons, and "},
+    {"h":"eventually destroy the creature that's been terrorizing the local town - whatever the cost."},
+    {"end": "---------------------------"}]
+}
