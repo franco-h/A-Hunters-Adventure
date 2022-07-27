@@ -2,6 +2,7 @@ package com.huntersadventure.game;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.huntersadventure.gameobjects.Characters;
+import com.huntersadventure.gameobjects.Direction;
 import com.huntersadventure.gameobjects.Location;
 import com.huntersadventure.jsonparser.Json;
 
@@ -54,17 +55,24 @@ public class GameController {
         JsonNode tgNode = Json.parse(new File("src/main/resources/locations/towngate.json"));
         JsonNode bsNode = Json.parse(new File("src/main/resources/locations/blacksmith.json"));
         JsonNode ahNode = Json.parse(new File("src/main/resources/locations/abandonedhouse.json"));
+        JsonNode innNode = Json.parse(new File("src/main/resources/locations/inn.json"));
 
-        Location guardTower = Json.fromJson(gtNode, Location.class);
+        Location inn = Json.fromJson(innNode, Location.class);
         Location blackSmith = Json.fromJson(bsNode, Location.class);
+        Location guardTower = Json.fromJson(gtNode, Location.class);
         Location abandonedHouse = Json.fromJson(ahNode, Location.class);
         Location townGate = Json.fromJson(tgNode, Location.class);
 
-        townMap.add(townGate);
+        // Location index: 0
+        townMap.add(inn);
+        // Location index: 1
         townMap.add(blackSmith);
+        // Location index: 2
         townMap.add(guardTower);
+        // Location index: 3
         townMap.add(abandonedHouse);
-        System.out.println(townMap);
+        // Location index: 4
+        townMap.add(townGate);
     }
 
 
@@ -236,13 +244,17 @@ public class GameController {
         // TODO: Implement player's function to move between rooms
         if (commandOne.equals("go")) {
             if (commandTwo.equals("north")) {
-                return "You go north.";
+                goNorth();
+                message = "Your current location is the " + p1.getLocation().getName();
             } else if (commandTwo.equals("south")) {
-                return "You go south.";
+                goSouth();
+                message = "Your current location is the " + p1.getLocation().getName();
             } else if (commandTwo.equals("west")) {
-                return "You go west.";
+                goWest();
+                message = "Your current location is the " + p1.getLocation().getName();
             } else if (commandTwo.equals("east")) {
-                return "You go east.";
+                goEast();
+                message = "Your current location is the " + p1.getLocation().getName();
             } else {
                 message = "Invalid direction.";
             }
@@ -271,6 +283,59 @@ public class GameController {
             }
         }
         return message;
+    }
+
+    public void movePlayer(Characters player, Location location) {
+        player.setLocation(location);
+    }
+
+    public int moveTo(Characters player, Direction direction) {
+        Location location = player.getLocation();
+        int exit;
+
+        switch (direction) {
+            case NORTH:
+                exit = location.getNorth();
+                break;
+            case SOUTH:
+                exit = location.getSouth();
+                break;
+            case WEST:
+                exit = location.getWest();
+                break;
+            case EAST:
+                exit = location.getEast();
+                break;
+            default:
+                exit = Direction.NOEXIT;
+                break;
+        }
+        if (exit != Direction.NOEXIT) {
+            movePlayer(player, townMap.get(exit));
+        }
+        return exit;
+    }
+
+    public void movePlayerTo(Direction direction) {
+        if (moveTo(p1,direction) == Direction.NOEXIT) {
+            System.out.println("No Exit");
+        }
+    }
+
+    private void goNorth() {
+        movePlayerTo(Direction.NORTH);
+    }
+
+    private void goSouth() {
+        movePlayerTo(Direction.SOUTH);
+    }
+
+    private void goWest() {
+        movePlayerTo(Direction.WEST);
+    }
+
+    private void goEast() {
+        movePlayerTo(Direction.EAST);
     }
 
     public void clearCons() {
@@ -304,22 +369,3 @@ public class GameController {
 //                "                                                                                                                                                                                   ");
 //    }
 }
-
-//    List<Location> map = new ArrayList<>();
-//
-//    public void generateMap() throws IOException {
-//        JsonNode gtNode = Json.parse(new File("lib/locations/guardtower.json"));
-//        JsonNode tgNode = Json.parse(new File("lib/locations/towngate.json"));
-//        JsonNode bsNode = Json.parse(new File("lib/locations/blacksmith.json"));
-//        JsonNode ahNode = Json.parse(new File("lib/locations/abandonedhouse.json"));
-//
-//        Location guardTower = Json.fromJson(gtNode, Location.class);
-//        Location blackSmith = Json.fromJson(bsNode, Location.class);
-//        Location abandonedHouse = Json.fromJson(ahNode, Location.class);
-//        Location townGate = Json.fromJson(tgNode, Location.class);
-//
-//        map.add(townGate);
-//        map.add(blackSmith);
-//        map.add(guardTower);
-//        map.add(abandonedHouse);
-//    }

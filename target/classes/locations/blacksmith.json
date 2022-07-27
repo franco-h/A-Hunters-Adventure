@@ -1,5 +1,9 @@
 {
-"name": "Blacksmith",
-"description": "Get weapons here!",
-"items": ["silver arrows"]
+  "name": "Blacksmith",
+  "description": "Get weapons here!",
+  "items": ["silver arrows"],
+  "north": 0,
+  "south": 4,
+  "west": 2,
+  "east": 3
 }
