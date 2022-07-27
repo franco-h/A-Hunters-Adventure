@@ -80,14 +80,15 @@ public class Characters extends Prop{
 
     @Override
     public String toString() {
-        return "Character{" +
-                "health=" + health +
-                ", damage=" + damage +
-                ", shield=" + shield +
-                ", inventory=" + inventory +
-                ", location=" + location +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+        final StringBuffer sb = new StringBuffer("Characters: ");
+        sb.append(" name=").append(name);
+        sb.append(", description=").append(description);
+        sb.append(", health=").append(health);
+        sb.append(", damage=").append(damage);
+        sb.append(", shield=").append(shield);
+        sb.append(", inventory=").append(inventory);
+        sb.append(", location=").append(location);
+        sb.append('}');
+        return sb.toString();
     }
 }
