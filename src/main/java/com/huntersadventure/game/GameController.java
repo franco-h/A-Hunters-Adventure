@@ -7,10 +7,7 @@ import com.huntersadventure.gameobjects.Item;
 import com.huntersadventure.gameobjects.Location;
 import com.huntersadventure.jsonparser.Json;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,6 +19,9 @@ import java.util.stream.Collectors;
  */
 
 public class GameController {
+    public static final String ANSI_RESET = "\u001B[0m";  //resets text color back to default value.
+    public static final String cyan = "\u001B[36m";
+    public static final String yellow = "\u001B[33m";
 
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
     Characters p1 = new Characters();
@@ -79,6 +79,31 @@ public class GameController {
         System.out.println("-----------------------------------------------------");
         System.out.println("-----------------------------------------------------");
     }
+
+    public void printBanner(){
+        BufferedReader reader;
+        try {
+            reader = new BufferedReader(new FileReader(
+                    "src/main/resources/GameText/banner.txt"));
+            String line = reader.readLine();
+            while (line != null) {
+                System.out.println(line);
+                // read next line
+                line = reader.readLine();
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void printIntro() throws IOException {
+        JsonNode introNode = Json.parse(new File("src/main/resources/GameText/Intro.json"));
+        for (JsonNode node : introNode.get("intro")) {
+            System.out.println(node.fields().next().getValue().asText());
+        }
+    }
+
 
     /**
      * Fixes any case(toLowerCase()) or whitespace(trim()) issues
@@ -198,19 +223,19 @@ public class GameController {
         }
 
         // TODO: Testing p1.item
-            if (commandOne.equals("get")) {
-                if (p1.getLocation().getItems().contains(commandTwo)) {
-                    p1.setInventory(Collections.singletonList(commandTwo));
-                    p1.getLocation().setItems(p1.getLocation().getItems().stream()
-                            .filter(item -> !item.equals(commandTwo))
-                            .collect(Collectors.toList()));
+        if (commandOne.equals("get")) {
+            if (p1.getLocation().getItems().contains(commandTwo)) {
+                p1.setInventory(Collections.singletonList(commandTwo));
+                p1.getLocation().setItems(p1.getLocation().getItems().stream()
+                        .filter(item -> !item.equals(commandTwo))
+                        .collect(Collectors.toList()));
 
-                    System.out.println(p1.getInventory());
-                    return "You pick up the " + commandTwo + ".";
-                }
-                else {
-                    message = "There is no " + commandTwo + " here.";
-                }
+                System.out.println(p1.getInventory());
+                return "You pick up the " + commandTwo + ".";
+            }
+            else {
+                message = "There is no " + commandTwo + " here.";
+            }
 
         } else if (commandOne.equals("use")) {
             if (items.contains(commandTwo)) {
