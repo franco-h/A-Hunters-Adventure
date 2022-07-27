@@ -1,7 +1,6 @@
 package com.huntersadventure.game;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huntersadventure.gameobjects.Characters;
 import com.huntersadventure.gameobjects.Direction;
 import com.huntersadventure.gameobjects.Item;
@@ -9,7 +8,6 @@ import com.huntersadventure.gameobjects.Location;
 import com.huntersadventure.jsonparser.Json;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,11 +19,9 @@ import java.util.stream.Collectors;
  */
 
 public class GameController {
-
     public static final String ANSI_RESET = "\u001B[0m";  //resets text color back to default value.
     public static final String cyan = "\u001B[36m";
     public static final String yellow = "\u001B[33m";
-
 
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
     Characters p1 = new Characters();
@@ -55,95 +51,6 @@ public class GameController {
         createPlayer(townMap);
         startPrompt();
         startGame();
-    }
-
-    public void generateItems() throws IOException {
-
-        JsonNode badgeNode = Json.parse(new File("src/main/resources/items/badge.json"));
-        JsonNode silverNode = Json.parse(new File("src/main/resources/items/silverarrows.json"));
-        JsonNode boxNode = Json.parse(new File("src/main/resources/items/mysterybox.json"));
-        JsonNode potionNode = Json.parse(new File("src/main/resources/items/potion.json"));
-        JsonNode mapNode = Json.parse(new File("src/main/resources/items/map.json"));
-        JsonNode bowNode = Json.parse(new File("src/main/resources/items/bow.json"));
-        JsonNode keyNode = Json.parse(new File("src/main/resources/items/key.json"));
-        JsonNode swordNode = Json.parse(new File("src/main/resources/items/sword.json"));
-
-        Item badge = Json.fromJson(badgeNode, Item.class);
-        Item silverArrows = Json.fromJson(silverNode, Item.class);
-        Item mysteryBox = Json.fromJson(boxNode, Item.class);
-        Item potion = Json.fromJson(potionNode, Item.class);
-        Item map = Json.fromJson(mapNode, Item.class);
-        Item bow = Json.fromJson(bowNode, Item.class);
-        Item key = Json.fromJson(keyNode, Item.class);
-        Item sword = Json.fromJson(swordNode, Item.class);
-
-        gameItems.add(badge);
-        gameItems.add(silverArrows);
-        gameItems.add(mysteryBox);
-        gameItems.add(potion);
-        gameItems.add(map);
-        gameItems.add(bow);
-        gameItems.add(key);
-        gameItems.add(sword);
-        System.out.println(gameItems);
-    }
-
-    public void generateMap() throws IOException {
-        JsonNode gtNode = Json.parse(new File("src/main/resources/locations/guardtower.json"));
-        JsonNode tgNode = Json.parse(new File("src/main/resources/locations/towngate.json"));
-        JsonNode bsNode = Json.parse(new File("src/main/resources/locations/blacksmith.json"));
-        JsonNode ahNode = Json.parse(new File("src/main/resources/locations/abandonedhouse.json"));
-        JsonNode innNode = Json.parse(new File("src/main/resources/locations/inn.json"));
-
-        Location inn = Json.fromJson(innNode, Location.class);
-        Location blackSmith = Json.fromJson(bsNode, Location.class);
-        Location guardTower = Json.fromJson(gtNode, Location.class);
-        Location abandonedHouse = Json.fromJson(ahNode, Location.class);
-        Location townGate = Json.fromJson(tgNode, Location.class);
-
-        // Location index: 0
-        townMap.add(inn);
-        // Location index: 1
-        townMap.add(blackSmith);
-        // Location index: 2
-        townMap.add(guardTower);
-        // Location index: 3
-        townMap.add(abandonedHouse);
-        // Location index: 4
-        townMap.add(townGate);
-    }
-
-
-    /**
-     * Create Player still in progress
-     */
-    public void createPlayer(List<Location> map) throws IOException {
-        List<String> startInv = new ArrayList<>();
-        System.out.println("What is your name?");
-        String name = in.readLine();
-        p1.setName(name);
-        p1.setHealth(10);
-        p1.setDamage(10);
-        p1.setShield(10);
-        p1.setInventory(startInv);
-        p1.setLocation(map.get(0));
-    }
-
-    public void startPrompt() throws IOException {
-        printBanner();
-        boolean keepGoing = true;
-        while (keepGoing) {
-            System.out.println("Welcome to the Hunter's Adventure!");
-            System.out.println("Do you want to see the instructions? (y/n)");
-            String input = in.readLine();
-            if (input.equals("y") || input.equals ("Y")) {
-                printIntro();
-            } else if (input.equals("n") || input.equals("N")) {
-                keepGoing = false;
-            } else {
-                System.out.println("Invalid input. Please try again.");
-            }
-        }
     }
 
     public void startGame() throws IOException {
@@ -196,8 +103,6 @@ public class GameController {
             System.out.println(node.fields().next().getValue().asText());
         }
     }
-
-
 
 
     /**
@@ -272,9 +177,9 @@ public class GameController {
                     break;
                 case "look":
 
-                    message = "You are in the " + yellow + p1.getLocation().getName() + ANSI_RESET + ". This is the " +
-                            p1.getLocation().getDescription() + ".\n"  +
-                            "Items available: " + cyan + p1.getLocation().getItems() + ANSI_RESET;
+                    message = "You are in the " + p1.getLocation().getName() + ". This is the " +
+                            p1.getLocation().getDescription() + ".\n" +
+                            "Items available: " + p1.getLocation().getItems();
 
                     break;
                 default:
@@ -302,35 +207,35 @@ public class GameController {
         if (commandOne.equals("go")) {
             if (commandTwo.equals("north")) {
                 goNorth();
-                message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET;
+                message = "Your current location is the " + p1.getLocation().getName();
             } else if (commandTwo.equals("south")) {
                 goSouth();
-                message = "Your current location is the " + yellow+ p1.getLocation().getName() + ANSI_RESET;
+                message = "Your current location is the " + p1.getLocation().getName();
             } else if (commandTwo.equals("west")) {
                 goWest();
-                message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET;
+                message = "Your current location is the " + p1.getLocation().getName();
             } else if (commandTwo.equals("east")) {
                 goEast();
-                message = "Your current location is the " + yellow +  p1.getLocation().getName() + ANSI_RESET;
+                message = "Your current location is the " + p1.getLocation().getName();
             } else {
                 message = "Invalid direction.";
             }
         }
 
         // TODO: Testing p1.item
-            if (commandOne.equals("get")) {
-                if (p1.getLocation().getItems().contains(commandTwo)) {
-                    p1.setInventory(Collections.singletonList(commandTwo));
-                    p1.getLocation().setItems(p1.getLocation().getItems().stream()
-                            .filter(item -> !item.equals(commandTwo))
-                            .collect(Collectors.toList()));
+        if (commandOne.equals("get")) {
+            if (p1.getLocation().getItems().contains(commandTwo)) {
+                p1.setInventory(Collections.singletonList(commandTwo));
+                p1.getLocation().setItems(p1.getLocation().getItems().stream()
+                        .filter(item -> !item.equals(commandTwo))
+                        .collect(Collectors.toList()));
 
-                    System.out.println(p1.getInventory());
-                    return "You pick up the " + commandTwo + ".";
-                }
-                else {
-                    message = "There is no " + commandTwo + " here.";
-                }
+                System.out.println(p1.getInventory());
+                return "You pick up the " + commandTwo + ".";
+            }
+            else {
+                message = "There is no " + commandTwo + " here.";
+            }
 
         } else if (commandOne.equals("use")) {
             if (items.contains(commandTwo)) {
@@ -395,21 +300,95 @@ public class GameController {
         movePlayerTo(Direction.EAST);
     }
 
-    public void clearCons() {
-        for (int i = 0; i < 100; i++)
-            System.out.println();
+    public void startPrompt() throws IOException {
+        boolean keepGoing = true;
+        while (keepGoing) {
+            System.out.println("Welcome to the Hunter's Adventure!");
+            System.out.println("Do you want to see the instructions? (y/n)");
+            String input = in.readLine();
+            if (input.equals("y")) {
+                System.out.println("----------THE STORY SO FAR----------");
+                System.out.println("For eons humanity itself has been under attack from malevolent entities, vicious creatures, and the very forces of evil itself. Once nearly wiped out from existence,\n" +
+                        "they were saved from extinction by the actions of other brave humans that not only stood against these evils, but actively searched for it in order to destroy it. \n" +
+                        "These hunters have remained steadfast in their defiance over centuries, however evil never rests. \n" +
+                        "You are one of these hunters.\n\n" +
+                        "After tracking a particularly vicious creature, you find yourself in an unfamiliar town, plagued with a recent string of brutal attacks and mysterious vanishings.\n" +
+                        "Determined to find a link to the prey you're hunting, you decide to stay at the local inn, only to find yourself stuck as the town guards shut the gates, \n" +
+                        "blocking off entry or exit from any visitors or residents. Determined to end its reign of terror, it is up to you to find items, weapons, and \n" +
+                        "eventually destroy the creature that's been terrorizing the local town - whatever the cost...");
+                System.out.println("--------------------");
+            } else if (input.equals("n")) {
+                keepGoing = false;
+            } else {
+                System.out.println("Invalid input. Please try again.");
+            }
+        }
     }
 
-    public void printBreak(int n) {
-        for (int i = 0; i < n; i++)
-            System.out.println("-");
-        System.out.println();
+    public void generateItems() throws IOException {
+
+        JsonNode badgeNode = Json.parse(new File("src/main/resources/items/badge.json"));
+        JsonNode silverNode = Json.parse(new File("src/main/resources/items/silverarrows.json"));
+        JsonNode boxNode = Json.parse(new File("src/main/resources/items/mysterybox.json"));
+        JsonNode potionNode = Json.parse(new File("src/main/resources/items/portion.json"));
+        JsonNode mapNode = Json.parse(new File("src/main/resources/items/map.json"));
+        JsonNode bowNode = Json.parse(new File("src/main/resources/items/bow.json"));
+        JsonNode keyNode = Json.parse(new File("src/main/resources/items/key.json"));
+        JsonNode swordNode = Json.parse(new File("src/main/resources/items/sword.json"));
+
+        Item badge = Json.fromJson(badgeNode, Item.class);
+        Item silverArrows = Json.fromJson(silverNode, Item.class);
+        Item mysteryBox = Json.fromJson(boxNode, Item.class);
+        Item potion = Json.fromJson(potionNode, Item.class);
+        Item map = Json.fromJson(mapNode, Item.class);
+        Item bow = Json.fromJson(bowNode, Item.class);
+        Item key = Json.fromJson(keyNode, Item.class);
+        Item sword = Json.fromJson(swordNode, Item.class);
+
+        gameItems.add(badge);
+        gameItems.add(silverArrows);
+        gameItems.add(mysteryBox);
+        gameItems.add(potion);
+        gameItems.add(map);
+        gameItems.add(bow);
+        gameItems.add(key);
+        gameItems.add(sword);
     }
 
+    public void generateMap() throws IOException {
+        JsonNode gtNode = Json.parse(new File("src/main/resources/locations/guardtower.json"));
+        JsonNode tgNode = Json.parse(new File("src/main/resources/locations/towngate.json"));
+        JsonNode bsNode = Json.parse(new File("src/main/resources/locations/blacksmith.json"));
+        JsonNode ahNode = Json.parse(new File("src/main/resources/locations/abandonedhouse.json"));
+        JsonNode innNode = Json.parse(new File("src/main/resources/locations/inn.json"));
 
-/**
- * Change banner to be read in
- */
+        Location inn = Json.fromJson(innNode, Location.class);
+        Location blackSmith = Json.fromJson(bsNode, Location.class);
+        Location guardTower = Json.fromJson(gtNode, Location.class);
+        Location abandonedHouse = Json.fromJson(ahNode, Location.class);
+        Location townGate = Json.fromJson(tgNode, Location.class);
 
+        // Location index: 0
+        townMap.add(inn);
+        // Location index: 1
+        townMap.add(blackSmith);
+        // Location index: 2
+        townMap.add(guardTower);
+        // Location index: 3
+        townMap.add(abandonedHouse);
+        // Location index: 4
+        townMap.add(townGate);
+    }
 
+    public void createPlayer(List<Location> map) throws IOException {
+        JsonNode playerNode = Json.parse(new File("src/main/resources/characters/player.json"));
+
+        // Monster JSON Nodes - Possible future for generating monster based on location
+        JsonNode mb1Node = Json.parse(new File("src/main/resources/characters/player.json"));
+        JsonNode mb2Node = Json.parse(new File("src/main/resources/characters/player.json"));
+        JsonNode fbNode = Json.parse(new File("src/main/resources/characters/player.json"));
+
+        p1 = Json.fromJson(playerNode, Characters.class);
+        p1.setLocation(map.get(0));
+    }
 }
