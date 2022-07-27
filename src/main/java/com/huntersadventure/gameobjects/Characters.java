@@ -2,7 +2,7 @@ package com.huntersadventure.gameobjects;
 
 import java.util.List;
 
-public class Character extends Prop{
+public class Characters extends Prop{
 
     private int health;
     private int damage;
@@ -10,17 +10,17 @@ public class Character extends Prop{
     private List<String> inventory;
     private Location location;
 
-    public Character() {
+    public Characters() {
     }
 
     // NPC Constructor
-    public Character(String name, String description, List<String> inventory, Location location) {
+    public Characters(String name, String description, List<String> inventory, Location location) {
         super(name, description);
         this.inventory = inventory;
         this.location = location;
     }
     // Player Constructor
-    public Character(String name, int health, int damage, int shield, List<String> inventory, Location location) {
+    public Characters(String name, int health, int damage, int shield, List<String> inventory, Location location) {
         super(name);
         this.health = health;
         this.damage = damage;
@@ -30,7 +30,7 @@ public class Character extends Prop{
     }
 
     // Enemy Constructor
-    public Character(String name, String description, int health, int damage, int shield, Location location) {
+    public Characters(String name, String description, int health, int damage, int shield, Location location) {
         super(name, description);
         this.health = health;
         this.damage = damage;
@@ -80,14 +80,15 @@ public class Character extends Prop{
 
     @Override
     public String toString() {
-        return "Character{" +
-                "health=" + health +
-                ", damage=" + damage +
-                ", shield=" + shield +
-                ", inventory=" + inventory +
-                ", location=" + location +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+        final StringBuffer sb = new StringBuffer("Characters: ");
+        sb.append(" name=").append(name);
+        sb.append(", description=").append(description);
+        sb.append(", health=").append(health);
+        sb.append(", damage=").append(damage);
+        sb.append(", shield=").append(shield);
+        sb.append(", inventory=").append(inventory);
+        sb.append(", location=").append(location);
+        sb.append('}');
+        return sb.toString();
     }
 }

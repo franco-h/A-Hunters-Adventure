@@ -1,21 +1,33 @@
 package com.huntersadventure.game;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.huntersadventure.gameobjects.Characters;
+import com.huntersadventure.gameobjects.Direction;
+import com.huntersadventure.gameobjects.Item;
 import com.huntersadventure.gameobjects.Location;
+import com.huntersadventure.jsonparser.Json;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Character Controller not yet in use. Below contains just an example.
  */
 
 public class GameController {
+    public static final String ANSI_RESET = "\u001B[0m";  //resets text color back to default value.
+    public static final String cyan = "\u001B[36m";
+    public static final String yellow = "\u001B[33m";
 
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+    Characters p1 = new Characters();
+    List<Location> townMap = new ArrayList<>();
+    List<Item> gameItems = new ArrayList<>();
+    ArrayList<String> playerInventory = new ArrayList<>();
 
     List<String> commands = new ArrayList<>(Arrays.asList(
             "look", "help", "quit"));
@@ -33,37 +45,20 @@ public class GameController {
     public GameController() throws IOException {
     }
 
-    public void startPrompt() throws IOException {
-        System.out.println("Welcome to the Hunter's Adventure!");
-        System.out.println("Do you want to see the instructions? (y/n)");
-        String input = in.readLine();
-        if (input.equals("y")) {
-            System.out.println("----------THE STORY SO FAR----------");
-            System.out.println("For eons humanity itself has been under attack from malevolent entities, vicious creatures, and the very forces of evil itself. Once nearly wiped out from existence,\n" +
-                    "they were saved from extinction by the actions of other brave humans that not only stood against these evils, but actively searched for it in order to destroy it. \n" +
-                    "These hunters have remained steadfast in their defiance over centuries, however evil never rests. \n" +
-                    "You are one of these hunters.\n\n" +
-                    "After tracking a particularly vicious creature, you find yourself in an unfamiliar town, plagued with a recent string of brutal attacks and mysterious vanishings.\n" +
-                    "Determined to find a link to the prey you're hunting, you decide to stay at the local inn, only to find yourself stuck as the town guards shut the gates, \n" +
-                    "blocking off entry or exit from any visitors or residents. Determined to end its reign of terror, it is up to you to find items, weapons, and \n" +
-                    "eventually destroy the creature that's been terrorizing the local town - whatever the cost...");
-            System.out.println("--------------------");
-            startGame();
-        } else if (input.equals("n")) {
-            startGame();
-        } else {
-            System.out.println("Invalid input. Please try again.");
-            startPrompt();
-        }
+    public void run() throws IOException {
+        generateItems();
+        generateMap();
+        createPlayer(townMap);
+        startPrompt();
+        startGame();
     }
 
     public void startGame() throws IOException {
         System.out.println("Welcome to the game!");
         // run help() to get a list of commands
         help();
-        String input;
         String output;
-
+        String input;
         // Prompt for input until the user enters "quit". If the user enters quit, the game will exit.
         do {
             System.out.println("Enter a command below.");
@@ -71,7 +66,7 @@ public class GameController {
             input = in.readLine();
             output = runCommand(input);
             System.out.println(output);
-        } while (!(input = in.readLine()).equals("quit"));
+        } while (!input.equals("quit"));
     }
 
     private void help() {
@@ -82,7 +77,33 @@ public class GameController {
         System.out.println("help - display commands available");
         System.out.println("quit - exit the game and return to menu");
         System.out.println("-----------------------------------------------------");
+        System.out.println("-----------------------------------------------------");
     }
+
+    public void printBanner(){
+        BufferedReader reader;
+        try {
+            reader = new BufferedReader(new FileReader(
+                    "src/main/resources/GameText/banner.txt"));
+            String line = reader.readLine();
+            while (line != null) {
+                System.out.println(line);
+                // read next line
+                line = reader.readLine();
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void printIntro() throws IOException {
+        JsonNode introNode = Json.parse(new File("src/main/resources/GameText/Intro.json"));
+        for (JsonNode node : introNode.get("intro")) {
+            System.out.println(node.fields().next().getValue().asText());
+        }
+    }
+
 
     /**
      * Fixes any case(toLowerCase()) or whitespace(trim()) issues
@@ -110,6 +131,7 @@ public class GameController {
         return strlist;
     }
 
+
     /**
      * parseCommand checks wordlist size and calls processSingleCommand,
      * processTwoCommand or lets user know their wordlist is invalid
@@ -119,13 +141,21 @@ public class GameController {
         if (wordlist.size () == 1) {
             message = processSingleCommand(wordlist);
         } else if (wordlist .size () == 2) {
+            if (wordlist.get(0).equals("grab") || wordlist.get(0).equals("take")) {
+                wordlist.set(0, "get");
+            }
+            message = processTwoCommand(wordlist);
+        } else if (wordlist.size() == 3) {
+            if (wordlist.get(0).equals("pick") && wordlist.get(1).equals("up")) {
+                wordlist.set(0, "get");
+                wordlist.set(1, wordlist.get(2));
+            }
             message = processTwoCommand(wordlist);
         } else {
             message = "Invalid command.";
         }
         return message;
     }
-
 
     /**
      * processSingleCommand takes in an input as a List
@@ -144,12 +174,13 @@ public class GameController {
                     help();
                     break;
                 case "quit":
-                    // Back to Main.java
-                    startPrompt();
                     break;
                 case "look":
-                    // TODO: Read description of the room and items available.
-                    message = "look()";
+
+                    message = "You are in the " + p1.getLocation().getName() + ". This is the " +
+                            p1.getLocation().getDescription() + ".\n" +
+                            "Items available: " + p1.getLocation().getItems();
+
                     break;
                 default:
                     message = commandOne + " (not yet implemented)";
@@ -175,25 +206,37 @@ public class GameController {
         // TODO: Implement player's function to move between rooms
         if (commandOne.equals("go")) {
             if (commandTwo.equals("north")) {
-                return "You go north.";
+                goNorth();
+                message = "Your current location is the " + p1.getLocation().getName();
             } else if (commandTwo.equals("south")) {
-                return "You go south.";
+                goSouth();
+                message = "Your current location is the " + p1.getLocation().getName();
             } else if (commandTwo.equals("west")) {
-                return "You go west.";
+                goWest();
+                message = "Your current location is the " + p1.getLocation().getName();
             } else if (commandTwo.equals("east")) {
-                return "You go east.";
+                goEast();
+                message = "Your current location is the " + p1.getLocation().getName();
             } else {
                 message = "Invalid direction.";
             }
         }
 
-        // TODO: Implement player's function to get or use items
+        // TODO: Testing p1.item
         if (commandOne.equals("get")) {
-            if (items.contains(commandTwo)) {
+            if (p1.getLocation().getItems().contains(commandTwo)) {
+                p1.setInventory(Collections.singletonList(commandTwo));
+                p1.getLocation().setItems(p1.getLocation().getItems().stream()
+                        .filter(item -> !item.equals(commandTwo))
+                        .collect(Collectors.toList()));
+
+                System.out.println(p1.getInventory());
                 return "You pick up the " + commandTwo + ".";
-            } else {
+            }
+            else {
                 message = "There is no " + commandTwo + " here.";
             }
+
         } else if (commandOne.equals("use")) {
             if (items.contains(commandTwo)) {
                 return "You use the " + commandTwo + ".";
@@ -204,53 +247,148 @@ public class GameController {
         return message;
     }
 
-    public void clearCons() {
-        for (int i = 0; i < 100; i++)
-            System.out.println();
+    public void movePlayer(Characters player, Location location) {
+        player.setLocation(location);
     }
 
-    public void printBreak(int n) {
-        for (int i = 0; i < n; i++)
-            System.out.println("-");
-        System.out.println();
+    public int moveTo(Characters player, Direction direction) {
+        Location location = player.getLocation();
+        int exit;
+
+        switch (direction) {
+            case NORTH:
+                exit = location.getNorth();
+                break;
+            case SOUTH:
+                exit = location.getSouth();
+                break;
+            case WEST:
+                exit = location.getWest();
+                break;
+            case EAST:
+                exit = location.getEast();
+                break;
+            default:
+                exit = Direction.NOEXIT;
+                break;
+        }
+        if (exit != Direction.NOEXIT) {
+            movePlayer(player, townMap.get(exit));
+        }
+        return exit;
     }
 
+    public void movePlayerTo(Direction direction) {
+        if (moveTo(p1,direction) == Direction.NOEXIT) {
+            System.out.println("No Exit");
+        }
+    }
 
-/**
- * Change banner to be read in
- */
+    private void goNorth() {
+        movePlayerTo(Direction.NORTH);
+    }
 
-//    public void welcomeBanner(){
-//        System.out.println("                                                                                                                                                                                   \n" +
-//                " @@@@@@      @@@  @@@  @@@  @@@  @@@  @@@  @@@@@@@  @@@@@@@@  @@@@@@@   @@@   @@@@@@       @@@@@@   @@@@@@@   @@@  @@@  @@@@@@@@  @@@  @@@  @@@@@@@  @@@  @@@  @@@@@@@   @@@@@@@@  \n" +
-//                "@@@@@@@@     @@@  @@@  @@@  @@@  @@@@ @@@  @@@@@@@  @@@@@@@@  @@@@@@@@   @@  @@@@@@@      @@@@@@@@  @@@@@@@@  @@@  @@@  @@@@@@@@  @@@@ @@@  @@@@@@@  @@@  @@@  @@@@@@@@  @@@@@@@@  \n" +
-//                "@@!  @@@     @@!  @@@  @@!  @@@  @@!@!@@@    @@!    @@!       @@!  @@@  @!   !@@          @@!  @@@  @@!  @@@  @@!  @@@  @@!       @@!@!@@@    @@!    @@!  @@@  @@!  @@@  @@!       \n" +
-//                "!@!  @!@     !@!  @!@  !@!  @!@  !@!!@!@!    !@!    !@!       !@!  @!@       !@!          !@!  @!@  !@!  @!@  !@!  @!@  !@!       !@!!@!@!    !@!    !@!  @!@  !@!  @!@  !@!       \n" +
-//                "@!@!@!@!     @!@!@!@!  @!@  !@!  @!@ !!@!    @!!    @!!!:!    @!@!!@!        !!@@!!       @!@!@!@!  @!@  !@!  @!@  !@!  @!!!:!    @!@ !!@!    @!!    @!@  !@!  @!@!!@!   @!!!:!    \n" +
-//                "!!!@!!!!     !!!@!!!!  !@!  !!!  !@!  !!!    !!!    !!!!!:    !!@!@!          !!@!!!      !!!@!!!!  !@!  !!!  !@!  !!!  !!!!!:    !@!  !!!    !!!    !@!  !!!  !!@!@!    !!!!!:    \n" +
-//                "!!:  !!!     !!:  !!!  !!:  !!!  !!:  !!!    !!:    !!:       !!: :!!             !:!     !!:  !!!  !!:  !!!  :!:  !!:  !!:       !!:  !!!    !!:    !!:  !!!  !!: :!!   !!:       \n" +
-//                ":!:  !:!     :!:  !:!  :!:  !:!  :!:  !:!    :!:    :!:       :!:  !:!           !:!      :!:  !:!  :!:  !:!   ::!!:!   :!:       :!:  !:!    :!:    :!:  !:!  :!:  !:!  :!:       \n" +
-//                "::   :::     ::   :::  ::::: ::   ::   ::     ::     :: ::::  ::   :::       :::: ::      ::   :::   :::: ::    ::::     :: ::::   ::   ::     ::    ::::: ::  ::   :::   :: ::::  \n" +
-//                " :   : :      :   : :   : :  :   ::    :      :     : :: ::    :   : :       :: : :        :   : :  :: :  :      :      : :: ::   ::    :      :      : :  :    :   : :  : :: ::   \n" +
-//                "                                                                                                                                                                                   ");
-//    }
+    private void goSouth() {
+        movePlayerTo(Direction.SOUTH);
+    }
+
+    private void goWest() {
+        movePlayerTo(Direction.WEST);
+    }
+
+    private void goEast() {
+        movePlayerTo(Direction.EAST);
+    }
+
+    public void startPrompt() throws IOException {
+        boolean keepGoing = true;
+        while (keepGoing) {
+            System.out.println("Welcome to the Hunter's Adventure!");
+            System.out.println("Do you want to see the instructions? (y/n)");
+            String input = in.readLine();
+            if (input.equals("y")) {
+                System.out.println("----------THE STORY SO FAR----------");
+                System.out.println("For eons humanity itself has been under attack from malevolent entities, vicious creatures, and the very forces of evil itself. Once nearly wiped out from existence,\n" +
+                        "they were saved from extinction by the actions of other brave humans that not only stood against these evils, but actively searched for it in order to destroy it. \n" +
+                        "These hunters have remained steadfast in their defiance over centuries, however evil never rests. \n" +
+                        "You are one of these hunters.\n\n" +
+                        "After tracking a particularly vicious creature, you find yourself in an unfamiliar town, plagued with a recent string of brutal attacks and mysterious vanishings.\n" +
+                        "Determined to find a link to the prey you're hunting, you decide to stay at the local inn, only to find yourself stuck as the town guards shut the gates, \n" +
+                        "blocking off entry or exit from any visitors or residents. Determined to end its reign of terror, it is up to you to find items, weapons, and \n" +
+                        "eventually destroy the creature that's been terrorizing the local town - whatever the cost...");
+                System.out.println("--------------------");
+            } else if (input.equals("n")) {
+                keepGoing = false;
+            } else {
+                System.out.println("Invalid input. Please try again.");
+            }
+        }
+    }
+
+    public void generateItems() throws IOException {
+
+        JsonNode badgeNode = Json.parse(new File("src/main/resources/items/badge.json"));
+        JsonNode silverNode = Json.parse(new File("src/main/resources/items/silverarrows.json"));
+        JsonNode boxNode = Json.parse(new File("src/main/resources/items/mysterybox.json"));
+        JsonNode potionNode = Json.parse(new File("src/main/resources/items/portion.json"));
+        JsonNode mapNode = Json.parse(new File("src/main/resources/items/map.json"));
+        JsonNode bowNode = Json.parse(new File("src/main/resources/items/bow.json"));
+        JsonNode keyNode = Json.parse(new File("src/main/resources/items/key.json"));
+        JsonNode swordNode = Json.parse(new File("src/main/resources/items/sword.json"));
+
+        Item badge = Json.fromJson(badgeNode, Item.class);
+        Item silverArrows = Json.fromJson(silverNode, Item.class);
+        Item mysteryBox = Json.fromJson(boxNode, Item.class);
+        Item potion = Json.fromJson(potionNode, Item.class);
+        Item map = Json.fromJson(mapNode, Item.class);
+        Item bow = Json.fromJson(bowNode, Item.class);
+        Item key = Json.fromJson(keyNode, Item.class);
+        Item sword = Json.fromJson(swordNode, Item.class);
+
+        gameItems.add(badge);
+        gameItems.add(silverArrows);
+        gameItems.add(mysteryBox);
+        gameItems.add(potion);
+        gameItems.add(map);
+        gameItems.add(bow);
+        gameItems.add(key);
+        gameItems.add(sword);
+    }
+
+    public void generateMap() throws IOException {
+        JsonNode gtNode = Json.parse(new File("src/main/resources/locations/guardtower.json"));
+        JsonNode tgNode = Json.parse(new File("src/main/resources/locations/towngate.json"));
+        JsonNode bsNode = Json.parse(new File("src/main/resources/locations/blacksmith.json"));
+        JsonNode ahNode = Json.parse(new File("src/main/resources/locations/abandonedhouse.json"));
+        JsonNode innNode = Json.parse(new File("src/main/resources/locations/inn.json"));
+
+        Location inn = Json.fromJson(innNode, Location.class);
+        Location blackSmith = Json.fromJson(bsNode, Location.class);
+        Location guardTower = Json.fromJson(gtNode, Location.class);
+        Location abandonedHouse = Json.fromJson(ahNode, Location.class);
+        Location townGate = Json.fromJson(tgNode, Location.class);
+
+        // Location index: 0
+        townMap.add(inn);
+        // Location index: 1
+        townMap.add(blackSmith);
+        // Location index: 2
+        townMap.add(guardTower);
+        // Location index: 3
+        townMap.add(abandonedHouse);
+        // Location index: 4
+        townMap.add(townGate);
+    }
+
+    public void createPlayer(List<Location> map) throws IOException {
+        JsonNode playerNode = Json.parse(new File("src/main/resources/characters/player.json"));
+
+        // Monster JSON Nodes - Possible future for generating monster based on location
+        JsonNode mb1Node = Json.parse(new File("src/main/resources/characters/player.json"));
+        JsonNode mb2Node = Json.parse(new File("src/main/resources/characters/player.json"));
+        JsonNode fbNode = Json.parse(new File("src/main/resources/characters/player.json"));
+
+        p1 = Json.fromJson(playerNode, Characters.class);
+        p1.setLocation(map.get(0));
+    }
 }
-
-//    List<Location> map = new ArrayList<>();
-//
-//    public void generateMap() throws IOException {
-//        JsonNode gtNode = Json.parse(new File("lib/locations/guardtower.json"));
-//        JsonNode tgNode = Json.parse(new File("lib/locations/towngate.json"));
-//        JsonNode bsNode = Json.parse(new File("lib/locations/blacksmith.json"));
-//        JsonNode ahNode = Json.parse(new File("lib/locations/abandonedhouse.json"));
-//
-//        Location guardTower = Json.fromJson(gtNode, Location.class);
-//        Location blackSmith = Json.fromJson(bsNode, Location.class);
-//        Location abandonedHouse = Json.fromJson(ahNode, Location.class);
-//        Location townGate = Json.fromJson(tgNode, Location.class);
-//
-//        map.add(townGate);
-//        map.add(blackSmith);
-//        map.add(guardTower);
-//        map.add(abandonedHouse);
-//    }

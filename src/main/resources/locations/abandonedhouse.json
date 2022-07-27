@@ -1,5 +1,9 @@
 {
-"name": "Abandoned House",
-"description": "A tower watching over the city",
-"items": ["potion","mystery box"]
+  "name": "Abandoned House",
+  "description": "A tower watching over the city",
+  "items": ["health potion","mystery box"],
+  "north": -1,
+  "south": -1,
+  "west": 1,
+  "east": -1
 }
