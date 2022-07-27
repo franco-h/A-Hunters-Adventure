@@ -230,7 +230,7 @@ public class GameController {
                         .filter(item -> !item.equals(commandTwo))
                         .collect(Collectors.toList()));
 
-                System.out.println(p1.getInventory());
+                System.out.println("Players Inventory: " + p1.getInventory());
                 return "You pick up the " + commandTwo + ".";
             }
             else {
@@ -330,7 +330,7 @@ public class GameController {
         JsonNode badgeNode = Json.parse(new File("src/main/resources/items/badge.json"));
         JsonNode silverNode = Json.parse(new File("src/main/resources/items/silverarrows.json"));
         JsonNode boxNode = Json.parse(new File("src/main/resources/items/mysterybox.json"));
-        JsonNode potionNode = Json.parse(new File("src/main/resources/items/portion.json"));
+        JsonNode potionNode = Json.parse(new File("src/main/resources/items/potion.json"));
         JsonNode mapNode = Json.parse(new File("src/main/resources/items/map.json"));
         JsonNode bowNode = Json.parse(new File("src/main/resources/items/bow.json"));
         JsonNode keyNode = Json.parse(new File("src/main/resources/items/key.json"));
