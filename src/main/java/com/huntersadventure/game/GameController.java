@@ -1,16 +1,15 @@
 package com.huntersadventure.game;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huntersadventure.gameobjects.Characters;
 import com.huntersadventure.gameobjects.Direction;
 import com.huntersadventure.gameobjects.Item;
 import com.huntersadventure.gameobjects.Location;
 import com.huntersadventure.jsonparser.Json;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,6 +21,11 @@ import java.util.stream.Collectors;
  */
 
 public class GameController {
+
+    public static final String ANSI_RESET = "\u001B[0m";  //resets text color back to default value.
+    public static final String cyan = "\u001B[36m";
+    public static final String yellow = "\u001B[33m";
+
 
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
     Characters p1 = new Characters();
@@ -126,23 +130,15 @@ public class GameController {
     }
 
     public void startPrompt() throws IOException {
+        printBanner();
         boolean keepGoing = true;
         while (keepGoing) {
             System.out.println("Welcome to the Hunter's Adventure!");
             System.out.println("Do you want to see the instructions? (y/n)");
             String input = in.readLine();
-            if (input.equals("y")) {
-                System.out.println("----------THE STORY SO FAR----------");
-                System.out.println("For eons humanity itself has been under attack from malevolent entities, vicious creatures, and the very forces of evil itself. Once nearly wiped out from existence,\n" +
-                        "they were saved from extinction by the actions of other brave humans that not only stood against these evils, but actively searched for it in order to destroy it. \n" +
-                        "These hunters have remained steadfast in their defiance over centuries, however evil never rests. \n" +
-                        "You are one of these hunters.\n\n" +
-                        "After tracking a particularly vicious creature, you find yourself in an unfamiliar town, plagued with a recent string of brutal attacks and mysterious vanishings.\n" +
-                        "Determined to find a link to the prey you're hunting, you decide to stay at the local inn, only to find yourself stuck as the town guards shut the gates, \n" +
-                        "blocking off entry or exit from any visitors or residents. Determined to end its reign of terror, it is up to you to find items, weapons, and \n" +
-                        "eventually destroy the creature that's been terrorizing the local town - whatever the cost...");
-                System.out.println("--------------------");
-            } else if (input.equals("n")) {
+            if (input.equals("y") || input.equals ("Y")) {
+                printIntro();
+            } else if (input.equals("n") || input.equals("N")) {
                 keepGoing = false;
             } else {
                 System.out.println("Invalid input. Please try again.");
@@ -176,6 +172,33 @@ public class GameController {
         System.out.println("-----------------------------------------------------");
         System.out.println("-----------------------------------------------------");
     }
+
+    public void printBanner(){
+        BufferedReader reader;
+        try {
+            reader = new BufferedReader(new FileReader(
+                    "src/main/resources/GameText/banner.txt"));
+            String line = reader.readLine();
+            while (line != null) {
+                System.out.println(line);
+                // read next line
+                line = reader.readLine();
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void printIntro() throws IOException {
+        JsonNode introNode = Json.parse(new File("src/main/resources/GameText/Intro.json"));
+        for (JsonNode node : introNode.get("intro")) {
+            System.out.println(node.fields().next().getValue().asText());
+        }
+    }
+
+
+
 
     /**
      * Fixes any case(toLowerCase()) or whitespace(trim()) issues
@@ -249,9 +272,9 @@ public class GameController {
                     break;
                 case "look":
 
-                    message = "You are in the " + p1.getLocation().getName() + ". This is the " +
-                            p1.getLocation().getDescription() + ".\n" +
-                            "Items available: " + p1.getLocation().getItems();
+                    message = "You are in the " + yellow + p1.getLocation().getName() + ANSI_RESET + ". This is the " +
+                            p1.getLocation().getDescription() + ".\n"  +
+                            "Items available: " + cyan + p1.getLocation().getItems() + ANSI_RESET;
 
                     break;
                 default:
@@ -279,16 +302,16 @@ public class GameController {
         if (commandOne.equals("go")) {
             if (commandTwo.equals("north")) {
                 goNorth();
-                message = "Your current location is the " + p1.getLocation().getName();
+                message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET;
             } else if (commandTwo.equals("south")) {
                 goSouth();
-                message = "Your current location is the " + p1.getLocation().getName();
+                message = "Your current location is the " + yellow+ p1.getLocation().getName() + ANSI_RESET;
             } else if (commandTwo.equals("west")) {
                 goWest();
-                message = "Your current location is the " + p1.getLocation().getName();
+                message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET;
             } else if (commandTwo.equals("east")) {
                 goEast();
-                message = "Your current location is the " + p1.getLocation().getName();
+                message = "Your current location is the " + yellow +  p1.getLocation().getName() + ANSI_RESET;
             } else {
                 message = "Invalid direction.";
             }
@@ -388,18 +411,5 @@ public class GameController {
  * Change banner to be read in
  */
 
-//    public void welcomeBanner(){
-//        System.out.println("                                                                                                                                                                                   \n" +
-//                " @@@@@@      @@@  @@@  @@@  @@@  @@@  @@@  @@@@@@@  @@@@@@@@  @@@@@@@   @@@   @@@@@@       @@@@@@   @@@@@@@   @@@  @@@  @@@@@@@@  @@@  @@@  @@@@@@@  @@@  @@@  @@@@@@@   @@@@@@@@  \n" +
-//                "@@@@@@@@     @@@  @@@  @@@  @@@  @@@@ @@@  @@@@@@@  @@@@@@@@  @@@@@@@@   @@  @@@@@@@      @@@@@@@@  @@@@@@@@  @@@  @@@  @@@@@@@@  @@@@ @@@  @@@@@@@  @@@  @@@  @@@@@@@@  @@@@@@@@  \n" +
-//                "@@!  @@@     @@!  @@@  @@!  @@@  @@!@!@@@    @@!    @@!       @@!  @@@  @!   !@@          @@!  @@@  @@!  @@@  @@!  @@@  @@!       @@!@!@@@    @@!    @@!  @@@  @@!  @@@  @@!       \n" +
-//                "!@!  @!@     !@!  @!@  !@!  @!@  !@!!@!@!    !@!    !@!       !@!  @!@       !@!          !@!  @!@  !@!  @!@  !@!  @!@  !@!       !@!!@!@!    !@!    !@!  @!@  !@!  @!@  !@!       \n" +
-//                "@!@!@!@!     @!@!@!@!  @!@  !@!  @!@ !!@!    @!!    @!!!:!    @!@!!@!        !!@@!!       @!@!@!@!  @!@  !@!  @!@  !@!  @!!!:!    @!@ !!@!    @!!    @!@  !@!  @!@!!@!   @!!!:!    \n" +
-//                "!!!@!!!!     !!!@!!!!  !@!  !!!  !@!  !!!    !!!    !!!!!:    !!@!@!          !!@!!!      !!!@!!!!  !@!  !!!  !@!  !!!  !!!!!:    !@!  !!!    !!!    !@!  !!!  !!@!@!    !!!!!:    \n" +
-//                "!!:  !!!     !!:  !!!  !!:  !!!  !!:  !!!    !!:    !!:       !!: :!!             !:!     !!:  !!!  !!:  !!!  :!:  !!:  !!:       !!:  !!!    !!:    !!:  !!!  !!: :!!   !!:       \n" +
-//                ":!:  !:!     :!:  !:!  :!:  !:!  :!:  !:!    :!:    :!:       :!:  !:!           !:!      :!:  !:!  :!:  !:!   ::!!:!   :!:       :!:  !:!    :!:    :!:  !:!  :!:  !:!  :!:       \n" +
-//                "::   :::     ::   :::  ::::: ::   ::   ::     ::     :: ::::  ::   :::       :::: ::      ::   :::   :::: ::    ::::     :: ::::   ::   ::     ::    ::::: ::  ::   :::   :: ::::  \n" +
-//                " :   : :      :   : :   : :  :   ::    :      :     : :: ::    :   : :       :: : :        :   : :  :: :  :      :      : :: ::   ::    :      :      : :  :    :   : :  : :: ::   \n" +
-//                "                                                                                                                                                                                   ");
-//    }
+
 }
