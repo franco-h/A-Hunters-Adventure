@@ -80,15 +80,19 @@ public class GameController {
      * Create Player still in progress
      */
     public void createPlayer(List<Location> map) throws IOException {
+        JsonNode playerNode = Json.parse(new File("src/main/resources/characters/player.json"));
+        JsonNode mb1Node = Json.parse(new File("src/main/resources/characters/player.json"));
+        JsonNode mb2Node = Json.parse(new File("src/main/resources/characters/player.json"));
+        JsonNode fbNode = Json.parse(new File("src/main/resources/characters/player.json"));
+
+        p1 = Json.fromJson(playerNode, Characters.class);
+        System.out.println(p1);
+
         List<String> startInv = new ArrayList<>();
-        System.out.println("What is your name?");
-        String name = in.readLine();
-        p1.setName(name);
-        p1.setHealth(10);
-        p1.setDamage(10);
-        p1.setShield(10);
+
         p1.setInventory(startInv);
         p1.setLocation(map.get(0));
+        System.out.println(p1);
     }
 
     public void startPrompt() throws IOException {
