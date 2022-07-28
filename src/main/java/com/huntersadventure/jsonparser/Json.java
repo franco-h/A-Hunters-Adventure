@@ -5,10 +5,28 @@ import com.fasterxml.jackson.databind.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 public class Json {
 
     private static ObjectMapper objectMapper = getDefaultObjectMapper();
+
+
+    public InputStream getResourceStream(String name) {
+
+        URL url = getClass().getResource(name);
+        InputStream inputStream = null;
+        try {
+            inputStream  = url.openStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return inputStream;
+    }
+
+    //
 
     private static ObjectMapper getDefaultObjectMapper() {
         ObjectMapper defaultObjectMapper = new ObjectMapper();
@@ -16,11 +34,15 @@ public class Json {
         return defaultObjectMapper;
     }
 
-    public static JsonNode parse(File src) throws IOException {
+    public JsonNode parse(File src) throws IOException {
         return objectMapper.readTree(src);
     }
 
-    public static <T> T fromJson(JsonNode node , Class<T> c) throws JsonProcessingException {
+    public JsonNode parse(InputStream src) throws IOException {
+        return objectMapper.readTree(src);
+    }
+
+    public <T> T fromJson(JsonNode node , Class<T> c) throws JsonProcessingException {
         return objectMapper.treeToValue(node, c);
     }
 
