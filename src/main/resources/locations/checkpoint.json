@@ -1,0 +1,9 @@
+{
+  "name": "Abandoned Checkpoint",
+  "description": "The Town Guards used to station the checkpoint here, but it was abandoned long ago. The checkpoint is now controlled by the lawless bandit",
+  "items":["key"],
+  "north": 5,
+  "south": -1,
+  "west": -1,
+  "east": -1
+}
