@@ -254,17 +254,13 @@ public class GameController {
                     break;
                 case "look":
 
-                    String inventory = "";
+                    StringBuilder inventory = new StringBuilder();
 
                     for (int i = 0; i < p1.getInventory().size(); i++) {
-                        // If the item is "bow" or "arrow"
                         if (p1.getInventory().get(i).getName().equals("bow") || p1.getInventory().get(i).getName().equals("arrows")) {
-                            inventory += (i + 1) + ". " + p1.getInventory().get(i).getName() + " - " +
-                                    p1.getInventory().get(i).getDescription() +
-                                    " - Arrows remain: " + p1.getInventory().get(i).getValue() + "\n";
+                            inventory.append(i + 1).append(". ").append(p1.getInventory().get(i).getName()).append(" - ").append(p1.getInventory().get(i).getDescription()).append(" - Arrows remain: ").append(p1.getInventory().get(i).getValue()).append("\n");
                         } else {
-                            inventory += (i + 1) + ". " + p1.getInventory().get(i).getName() + " - " +
-                                    p1.getInventory().get(i).getDescription() +"\n";
+                            inventory.append(i + 1).append(". ").append(p1.getInventory().get(i).getName()).append(" - ").append(p1.getInventory().get(i).getDescription()).append("\n");
                         }
                     }
 
