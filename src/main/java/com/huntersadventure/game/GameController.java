@@ -13,9 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Character Controller not yet in use. Below contains just an example.
@@ -56,13 +54,14 @@ public class GameController {
     public void generateItems() throws IOException {
 
         JsonNode badgeNode = Json.parse(new File("src/main/resources/items/badge.json"));
-        JsonNode silverNode = Json.parse(new File("src/main/resources/items/silverarrows.json"));
-        JsonNode boxNode = Json.parse(new File("src/main/resources/items/mysterybox.json"));
+        JsonNode silverNode = Json.parse(new File("src/main/resources/items/arrows.json"));
+        JsonNode boxNode = Json.parse(new File("src/main/resources/items/locker.json"));
         JsonNode potionNode = Json.parse(new File("src/main/resources/items/potion.json"));
         JsonNode mapNode = Json.parse(new File("src/main/resources/items/map.json"));
         JsonNode bowNode = Json.parse(new File("src/main/resources/items/bow.json"));
         JsonNode keyNode = Json.parse(new File("src/main/resources/items/key.json"));
         JsonNode swordNode = Json.parse(new File("src/main/resources/items/sword.json"));
+        JsonNode shieldNode = Json.parse(new File("src/main/resources/items/shield.json"));
 
         Item badge = Json.fromJson(badgeNode, Item.class);
         Item silverArrows = Json.fromJson(silverNode, Item.class);
@@ -72,6 +71,7 @@ public class GameController {
         Item bow = Json.fromJson(bowNode, Item.class);
         Item key = Json.fromJson(keyNode, Item.class);
         Item sword = Json.fromJson(swordNode, Item.class);
+        Item shield = Json.fromJson(shieldNode, Item.class);
 
         gameItems.add(badge);
         gameItems.add(silverArrows);
@@ -81,7 +81,8 @@ public class GameController {
         gameItems.add(bow);
         gameItems.add(key);
         gameItems.add(sword);
-        System.out.println(gameItems);
+        gameItems.add(shield);
+
     }
 
     public void generateMap() throws IOException {
@@ -114,7 +115,7 @@ public class GameController {
      * Create Player still in progress
      */
     public void createPlayer(List<Location> map) throws IOException {
-        List<String> startInv = new ArrayList<>();
+        List<Item> startInv = new ArrayList<>();
         System.out.println("What is your name?");
         String name = in.readLine();
         p1.setName(name);
@@ -210,19 +211,23 @@ public class GameController {
      */
     private String parseCommand(List<String> wordlist) throws IOException {
         String message;
-        if (wordlist.size () == 1) {
+        if (wordlist.size() == 1) {
             message = processSingleCommand(wordlist);
-        } else if (wordlist .size () == 2) {
+        } else if (wordlist.size() == 2) {
             if (wordlist.get(0).equals("grab") || wordlist.get(0).equals("take")) {
                 wordlist.set(0, "get");
             }
             message = processTwoCommand(wordlist);
+
         } else if (wordlist.size() == 3) {
             if (wordlist.get(0).equals("pick") && wordlist.get(1).equals("up")) {
                 wordlist.set(0, "get");
                 wordlist.set(1, wordlist.get(2));
+            } else if (wordlist.get(0).equals("grab") || wordlist.get(0).equals("take")) {
+                wordlist.set(0, "get");
             }
             message = processTwoCommand(wordlist);
+
         } else {
             message = "Invalid command.";
         }
@@ -248,10 +253,11 @@ public class GameController {
                 case "quit":
                     break;
                 case "look":
-
                     message = "You are in the " + p1.getLocation().getName() + ". This is the " +
                             p1.getLocation().getDescription() + ".\n" +
-                            "Items available: " + p1.getLocation().getItems();
+                            "Items available in the room: " + p1.getLocation().getItems() + "\n" +
+                            "Player's current health: " + p1.getHealth() + "\n" +
+                            "Player's inventory: " + p1.getInventory() + "\n";
 
                     break;
                 default:
@@ -269,51 +275,120 @@ public class GameController {
     private String processTwoCommand(List<String> wordlist) {
         String commandOne;
         String commandTwo;
+
         String message = "";
+
         commandOne = wordlist.get(0);
         commandTwo = wordlist.get(1);
+
         if (!preparatoryCommands.contains(commandOne)) {
             message = commandOne + " is not a valid preparatory command.";
         }
-        // TODO: Implement player's function to move between rooms
+
         if (commandOne.equals("go")) {
-            if (commandTwo.equals("north")) {
-                goNorth();
-                message = "Your current location is the " + p1.getLocation().getName();
-            } else if (commandTwo.equals("south")) {
-                goSouth();
-                message = "Your current location is the " + p1.getLocation().getName();
-            } else if (commandTwo.equals("west")) {
-                goWest();
-                message = "Your current location is the " + p1.getLocation().getName();
-            } else if (commandTwo.equals("east")) {
-                goEast();
-                message = "Your current location is the " + p1.getLocation().getName();
-            } else {
-                message = "Invalid direction.";
+            switch (commandTwo) {
+                case "north":
+                    goNorth();
+                    message = "Your current location is the " + p1.getLocation().getName();
+                    break;
+                case "south":
+                    goSouth();
+                    message = "Your current location is the " + p1.getLocation().getName();
+                    break;
+                case "west":
+                    goWest();
+                    message = "Your current location is the " + p1.getLocation().getName();
+                    break;
+                case "east":
+                    goEast();
+                    message = "Your current location is the " + p1.getLocation().getName();
+                    break;
+                default:
+                    message = "Invalid direction.";
+                    break;
             }
         }
 
-        // TODO: Testing p1.item
-            if (commandOne.equals("get")) {
-                if (p1.getLocation().getItems().contains(commandTwo)) {
-                    p1.setInventory(Collections.singletonList(commandTwo));
-                    p1.getLocation().setItems(p1.getLocation().getItems().stream()
-                            .filter(item -> !item.equals(commandTwo))
-                            .collect(Collectors.toList()));
+        if (commandOne.equals("get")) {
+            if (p1.getLocation().getItems().contains(commandTwo)) {
+                for (Item item : gameItems) {
+                    if (item.getName().equals(commandTwo)) {
+                        p1.getInventory().add(item);
+                        p1.getLocation().getItems().remove(commandTwo);
 
-                    System.out.println(p1.getInventory());
-                    return "You pick up the " + commandTwo + ".";
+                        break;
+                    } else {
+                        message = "There is no match.";
+                    }
                 }
-                else {
-                    message = "There is no " + commandTwo + " here.";
-                }
-
-        } else if (commandOne.equals("use")) {
-            if (items.contains(commandTwo)) {
-                return "You use the " + commandTwo + ".";
+                return "You pick up the " + commandTwo + ".";
             } else {
                 message = "There is no " + commandTwo + " here.";
+            }
+        }
+
+        if (commandOne.equals("use")) {
+            if (p1.getInventory().isEmpty()) {
+                return "You have no items to use.";
+            } else {
+                for (Item item : p1.getInventory()) {
+                    if (item.getName().equals(commandTwo)) {
+                        if (commandTwo.equals("potion")) {
+                            p1.setHealth(p1.getHealth() + item.getValue());
+                            p1.getInventory().remove(item);
+                            return "You use the potion and gain 10 health.";
+                        } else if (commandTwo.equals("arrows")) {
+                            for (Item item2 : p1.getInventory()) {
+                                if (item2.getName().equals("bow")) {
+                                    item2.setValue(item2.getValue() + item.getValue());
+                                    p1.getInventory().remove(item);
+                                    return "You use the arrows and add them to the bow.";
+                                }
+                            }
+
+                        } else if (commandTwo.equals("key") && p1.getLocation().getItems().contains("locker")) {
+                            System.out.println("WoW! It is an armor that can protect you from the monsters!");
+                            for (Item shield : gameItems) {
+                                if (shield.getName().equals("shield")) {
+                                    p1.getInventory().add(shield);
+                                    p1.getLocation().getItems().remove("locker");
+                                }
+                            }
+                        } else if (commandTwo.equals("map")) {
+                            for (Location location : townMap) {
+                                System.out.println(location.getName());
+                            }
+
+                        } else if (commandTwo.equals("sword") || commandTwo.equals("bow")) {
+                            return "You can only use the sword or the bow during combat.";
+
+                        } else if (commandTwo.equals("shield")) {
+                            p1.setShield(p1.getShield() + item.getValue());
+                            p1.getInventory().remove(item);
+
+                        } else {
+                            return "You cannot use that item.";
+                        }
+                    } else {
+                        message = "You do not have that item.";
+                    }
+                }
+            }
+        }
+
+        if (commandOne.equals("drop")) {
+            if (p1.getInventory().isEmpty()) {
+                return "There is nothing to drop.";
+            } else {
+                for (Item item : p1.getInventory()) {
+                    if (item.getName().equals(commandTwo)) {
+                        p1.getLocation().getItems().add(commandTwo);
+                        p1.getInventory().remove(item);
+                        return "You drop the " + commandTwo + ".";
+                    } else {
+                        message = "You do not have that item.";
+                    }
+                }
             }
         }
         return message;
@@ -351,7 +426,7 @@ public class GameController {
     }
 
     public void movePlayerTo(Direction direction) {
-        if (moveTo(p1,direction) == Direction.NOEXIT) {
+        if (moveTo(p1, direction) == Direction.NOEXIT) {
             System.out.println("No Exit");
         }
     }
