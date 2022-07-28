@@ -1,0 +1,9 @@
+{
+  "name": "Dungeon Entrance",
+  "description": "We are finally here to kill the Man-Eater! But its minions are guarding the entrance! We need to beat them before we can get into the dungeon.",
+  "items":[],
+  "north": 6,
+  "south": 9,
+  "west": -1,
+  "east": -1
+}

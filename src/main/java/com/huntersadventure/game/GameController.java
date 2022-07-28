@@ -75,7 +75,7 @@ public class GameController {
             Item bow = json.fromJson(bowNode, Item.class);
             Item key = json.fromJson(keyNode, Item.class);
             Item sword = json.fromJson(swordNode, Item.class);
-            Item armor = json.fromJson(shieldNode, Item.class);
+            Item shield = json.fromJson(shieldNode, Item.class);
 
             gameItems.add(badge);
             gameItems.add(arrows);
@@ -85,7 +85,7 @@ public class GameController {
             gameItems.add(bow);
             gameItems.add(key);
             gameItems.add(sword);
-            gameItems.add(armor);
+            gameItems.add(shield);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -101,12 +101,22 @@ public class GameController {
             JsonNode bsNode = json.parse(json.getResourceStream("/locations/blacksmith.json"));
             JsonNode ahNode = json.parse(json.getResourceStream("/locations/abandonedhouse.json"));
             JsonNode innNode = json.parse(json.getResourceStream("/locations/inn.json"));
+            JsonNode farmNode = json.parse(json.getResourceStream("/locations/farmland.json"));
+            JsonNode forestNode = json.parse(json.getResourceStream("/locations/forest.json"));
+            JsonNode checkpointNode = json.parse(json.getResourceStream("/locations/checkpoint.json"));
+            JsonNode dungeon1Node = json.parse(json.getResourceStream("/locations/dungeon1.json"));
+            JsonNode dungeon2Node = json.parse(json.getResourceStream("/locations/dungeon2.json"));
 
             Location inn = json.fromJson(innNode, Location.class);
             Location blackSmith = json.fromJson(bsNode, Location.class);
             Location guardTower = json.fromJson(gtNode, Location.class);
             Location abandonedHouse = json.fromJson(ahNode, Location.class);
             Location townGate = json.fromJson(tgNode, Location.class);
+            Location farmLand = json.fromJson(farmNode, Location.class);
+            Location forest = json.fromJson(forestNode, Location.class);
+            Location checkpoint = json.fromJson(checkpointNode, Location.class);
+            Location dungeon1 = json.fromJson(dungeon1Node, Location.class);
+            Location dungeon2 = json.fromJson(dungeon2Node, Location.class);
 
             // Location index: 0
             townMap.add(inn);
@@ -118,6 +128,17 @@ public class GameController {
             townMap.add(abandonedHouse);
             // Location index: 4
             townMap.add(townGate);
+            // Location index: 5
+            townMap.add(farmLand);
+            // Location index: 6
+            townMap.add(forest);
+            // Location index: 7
+            townMap.add(checkpoint);
+            // Location index: 8
+            townMap.add(dungeon1);
+            // Location index: 9
+            townMap.add(dungeon2);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -381,12 +402,7 @@ public class GameController {
 
                         } else if (commandTwo.equals("key") && p1.getLocation().getItems().contains("locker")) {
                             System.out.println("WoW! It is an armor that can protect you from the monsters!");
-                            for (Item shield : gameItems) {
-                                if (shield.getName().equals("shield")) {
-                                    p1.getInventory().add(shield);
-                                    p1.getLocation().getItems().remove("locker");
-                                }
-                            }
+
                         } else if (commandTwo.equals("map")) {
                             for (Location location : townMap) {
                                 System.out.println(location.getName());

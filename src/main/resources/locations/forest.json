@@ -1,0 +1,9 @@
+{
+  "name": "Forbidden Forest",
+  "description": "Look!!! There's a Ranger. Seems like he is blocking people to go further south",
+  "items":[],
+  "north": -1,
+  "south": 8,
+  "west": 4,
+  "east": -1
+}

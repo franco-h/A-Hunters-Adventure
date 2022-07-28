@@ -1,0 +1,9 @@
+{
+  "name": "Farmland",
+  "description": "People used to live freely outside the town but not anymore since the lawless bandit took over their home",
+  "items": [],
+  "north": -1,
+  "south": 7,
+  "west": -1,
+  "east": 4
+}

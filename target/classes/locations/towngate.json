@@ -4,6 +4,6 @@
   "items":["map"],
   "north": 1,
   "south": -1,
-  "west": -1,
-  "east": -1
+  "west": 5,
+  "east": 6
 }
