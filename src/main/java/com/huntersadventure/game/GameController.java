@@ -310,13 +310,18 @@ public class GameController {
         }
 
         if (commandOne.equals("get")) {
-            if (p1.getLocation().getItems().contains(commandTwo)) {
+
+            if (commandTwo.equals("locker") && p1.getLocation().getItems().contains("locker")) {
+                return "Hmmmmm. The locker is fixed to the wall, and you need a key to open it.";
+
+            } else if (p1.getLocation().getItems().contains(commandTwo)) {
                 for (Item item : gameItems) {
                     if (item.getName().equals(commandTwo)) {
                         p1.getInventory().add(item);
                         p1.getLocation().getItems().remove(commandTwo);
 
                         break;
+
                     } else {
                         message = "There is no match.";
                     }
