@@ -28,10 +28,8 @@ public class Item extends Prop {
 
     @Override
     public String toString() {
-        return "Item{" +
-                "value=" + value +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+        return "name = " + name +
+                ", value = '" + value + '\'' +
+                ", description = '" + description + '\'';
     }
 }

@@ -253,13 +253,29 @@ public class GameController {
                 case "quit":
                     break;
                 case "look":
+
+                    String inventory = "";
+
+                    for (int i = 0; i < p1.getInventory().size(); i++) {
+                        // If the item is "bow" or "arrow"
+                        if (p1.getInventory().get(i).getName().equals("bow") || p1.getInventory().get(i).getName().equals("arrows")) {
+                            inventory += (i + 1) + ". " + p1.getInventory().get(i).getName() + " - " +
+                                    p1.getInventory().get(i).getDescription() +
+                                    " - Arrows remain: " + p1.getInventory().get(i).getValue() + "\n";
+                        } else {
+                            inventory += (i + 1) + ". " + p1.getInventory().get(i).getName() + " - " +
+                                    p1.getInventory().get(i).getDescription() +"\n";
+                        }
+                    }
+
                     message = "You are in the " + p1.getLocation().getName() + ". This is the " +
                             p1.getLocation().getDescription() + ".\n" +
                             "Items available in the room: " + p1.getLocation().getItems() + "\n" +
                             "Player's current health: " + p1.getHealth() + "\n" +
-                            "Player's inventory: " + p1.getInventory() + "\n";
+                            "Player's inventory is as follow: \n" + inventory ;
 
                     break;
+
                 default:
                     message = commandOne + " (not yet implemented)";
                     break;
