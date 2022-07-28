@@ -7,20 +7,20 @@ public class Characters extends Prop{
     private int health;
     private int damage;
     private int shield;
-    private List<String> inventory;
+    private List<Item> inventory;
     private Location location;
 
     public Characters() {
     }
 
     // NPC Constructor
-    public Characters(String name, String description, List<String> inventory, Location location) {
+    public Characters(String name, String description, List<Item> inventory, Location location) {
         super(name, description);
         this.inventory = inventory;
         this.location = location;
     }
     // Player Constructor
-    public Characters(String name, int health, int damage, int shield, List<String> inventory, Location location) {
+    public Characters(String name, int health, int damage, int shield, List<Item> inventory, Location location) {
         super(name);
         this.health = health;
         this.damage = damage;
@@ -62,11 +62,11 @@ public class Characters extends Prop{
         this.shield = shield;
     }
 
-    public List<String> getInventory() {
+    public List<Item> getInventory() {
         return inventory;
     }
 
-    public void setInventory(List<String> inventory) {
+    public void setInventory(List<Item> inventory) {
         this.inventory = inventory;
     }
 
