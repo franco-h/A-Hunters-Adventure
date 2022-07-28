@@ -1,8 +1,9 @@
-com/huntersadventure/gameobjects/Direction.class
-com/huntersadventure/gameobjects/Character.class
-com/huntersadventure/client/Main.class
-com/huntersadventure/game/GameController.class
 com/huntersadventure/gameobjects/Location.class
 com/huntersadventure/gameobjects/Prop.class
 com/huntersadventure/jsonparser/Json.class
 com/huntersadventure/gameobjects/Item.class
+com/huntersadventure/game/GameController$1.class
+com/huntersadventure/gameobjects/Direction.class
+com/huntersadventure/client/Main.class
+com/huntersadventure/game/GameController.class
+com/huntersadventure/gameobjects/Characters.class

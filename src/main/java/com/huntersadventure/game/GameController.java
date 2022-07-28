@@ -53,12 +53,91 @@ public class GameController {
         startGame();
     }
 
+    public void generateItems() {
+
+        try {
+            Json json = new Json();
+            JsonNode badgeNode = json.parse(json.getResourceStream("/items/badge.json"));
+            JsonNode silverNode = json.parse(json.getResourceStream("/items/silverarrows.json"));
+            JsonNode boxNode = json.parse(json.getResourceStream("/items/mysterybox.json"));
+            JsonNode potionNode = json.parse(json.getResourceStream("/items/potion.json"));
+            JsonNode mapNode = json.parse(json.getResourceStream("/items/map.json"));
+            JsonNode bowNode = json.parse(json.getResourceStream("/items/bow.json"));
+            JsonNode keyNode = json.parse(json.getResourceStream("/items/key.json"));
+            JsonNode swordNode = json.parse(json.getResourceStream("/items/sword.json"));
+
+            Item badge = json.fromJson(badgeNode, Item.class);
+            Item silverArrows = json.fromJson(silverNode, Item.class);
+            Item mysteryBox = json.fromJson(boxNode, Item.class);
+            Item potion = json.fromJson(potionNode, Item.class);
+            Item map = json.fromJson(mapNode, Item.class);
+            Item bow = json.fromJson(bowNode, Item.class);
+            Item key = json.fromJson(keyNode, Item.class);
+            Item sword = json.fromJson(swordNode, Item.class);
+
+            gameItems.add(badge);
+            gameItems.add(silverArrows);
+            gameItems.add(mysteryBox);
+            gameItems.add(potion);
+            gameItems.add(map);
+            gameItems.add(bow);
+            gameItems.add(key);
+            gameItems.add(sword);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void generateMap() {
+        try {
+            Json json = new Json();
+
+            JsonNode gtNode = json.parse(json.getResourceStream("/locations/guardtower.json"));
+            JsonNode tgNode = json.parse(json.getResourceStream("/locations/towngate.json"));
+            JsonNode bsNode = json.parse(json.getResourceStream("/locations/blacksmith.json"));
+            JsonNode ahNode = json.parse(json.getResourceStream("/locations/abandonedhouse.json"));
+            JsonNode innNode = json.parse(json.getResourceStream("/locations/inn.json"));
+
+            Location inn = json.fromJson(innNode, Location.class);
+            Location blackSmith = json.fromJson(bsNode, Location.class);
+            Location guardTower = json.fromJson(gtNode, Location.class);
+            Location abandonedHouse = json.fromJson(ahNode, Location.class);
+            Location townGate = json.fromJson(tgNode, Location.class);
+
+            // Location index: 0
+            townMap.add(inn);
+            // Location index: 1
+            townMap.add(blackSmith);
+            // Location index: 2
+            townMap.add(guardTower);
+            // Location index: 3
+            townMap.add(abandonedHouse);
+            // Location index: 4
+            townMap.add(townGate);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createPlayer(List<Location> map) {
+        try {
+            Json json = new Json();
+            JsonNode playerNode = json.parse(json.getResourceStream("/characters/player.json"));
+
+            p1 = json.fromJson(playerNode, Characters.class);
+            p1.setLocation(map.get(0));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void startGame() throws IOException {
         System.out.println("Welcome to the game!");
         // run help() to get a list of commands
         help();
         String output;
         String input;
+
         // Prompt for input until the user enters "quit". If the user enters quit, the game will exit.
         do {
             System.out.println("Enter a command below.");
@@ -97,10 +176,15 @@ public class GameController {
         }
     }
 
-    public void printIntro() throws IOException {
-        JsonNode introNode = Json.parse(new File("src/main/resources/GameText/Intro.json"));
-        for (JsonNode node : introNode.get("intro")) {
-            System.out.println(node.fields().next().getValue().asText());
+    public void printIntro() {
+        try {
+            Json json = new Json();
+            JsonNode introNode = json.parse(new File("src/main/resources/GameText/Intro.json"));
+            for (JsonNode node : introNode.get("intro")) {
+                System.out.println(node.fields().next().getValue().asText());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -161,7 +245,7 @@ public class GameController {
      * processSingleCommand takes in an input as a List
      * and checks String 0 for keywords allowed in List<String> commands
      */
-    private String processSingleCommand(List<String> wordlist) throws IOException {
+    private String processSingleCommand(List<String> wordlist) {
         String commandOne;
         String message = "";
 
@@ -176,7 +260,6 @@ public class GameController {
                 case "quit":
                     break;
                 case "look":
-
                     message = "You are in the " + p1.getLocation().getName() + ". This is the " +
                             p1.getLocation().getDescription() + ".\n" +
                             "Items available: " + p1.getLocation().getItems();
@@ -325,70 +408,4 @@ public class GameController {
         }
     }
 
-    public void generateItems() throws IOException {
-
-        JsonNode badgeNode = Json.parse(new File("src/main/resources/items/badge.json"));
-        JsonNode silverNode = Json.parse(new File("src/main/resources/items/silverarrows.json"));
-        JsonNode boxNode = Json.parse(new File("src/main/resources/items/mysterybox.json"));
-        JsonNode potionNode = Json.parse(new File("src/main/resources/items/potion.json"));
-        JsonNode mapNode = Json.parse(new File("src/main/resources/items/map.json"));
-        JsonNode bowNode = Json.parse(new File("src/main/resources/items/bow.json"));
-        JsonNode keyNode = Json.parse(new File("src/main/resources/items/key.json"));
-        JsonNode swordNode = Json.parse(new File("src/main/resources/items/sword.json"));
-
-        Item badge = Json.fromJson(badgeNode, Item.class);
-        Item silverArrows = Json.fromJson(silverNode, Item.class);
-        Item mysteryBox = Json.fromJson(boxNode, Item.class);
-        Item potion = Json.fromJson(potionNode, Item.class);
-        Item map = Json.fromJson(mapNode, Item.class);
-        Item bow = Json.fromJson(bowNode, Item.class);
-        Item key = Json.fromJson(keyNode, Item.class);
-        Item sword = Json.fromJson(swordNode, Item.class);
-
-        gameItems.add(badge);
-        gameItems.add(silverArrows);
-        gameItems.add(mysteryBox);
-        gameItems.add(potion);
-        gameItems.add(map);
-        gameItems.add(bow);
-        gameItems.add(key);
-        gameItems.add(sword);
-    }
-
-    public void generateMap() throws IOException {
-        JsonNode gtNode = Json.parse(new File("src/main/resources/locations/guardtower.json"));
-        JsonNode tgNode = Json.parse(new File("src/main/resources/locations/towngate.json"));
-        JsonNode bsNode = Json.parse(new File("src/main/resources/locations/blacksmith.json"));
-        JsonNode ahNode = Json.parse(new File("src/main/resources/locations/abandonedhouse.json"));
-        JsonNode innNode = Json.parse(new File("src/main/resources/locations/inn.json"));
-
-        Location inn = Json.fromJson(innNode, Location.class);
-        Location blackSmith = Json.fromJson(bsNode, Location.class);
-        Location guardTower = Json.fromJson(gtNode, Location.class);
-        Location abandonedHouse = Json.fromJson(ahNode, Location.class);
-        Location townGate = Json.fromJson(tgNode, Location.class);
-
-        // Location index: 0
-        townMap.add(inn);
-        // Location index: 1
-        townMap.add(blackSmith);
-        // Location index: 2
-        townMap.add(guardTower);
-        // Location index: 3
-        townMap.add(abandonedHouse);
-        // Location index: 4
-        townMap.add(townGate);
-    }
-
-    public void createPlayer(List<Location> map) throws IOException {
-        JsonNode playerNode = Json.parse(new File("src/main/resources/characters/player.json"));
-
-        // Monster JSON Nodes - Possible future for generating monster based on location
-        JsonNode mb1Node = Json.parse(new File("src/main/resources/characters/player.json"));
-        JsonNode mb2Node = Json.parse(new File("src/main/resources/characters/player.json"));
-        JsonNode fbNode = Json.parse(new File("src/main/resources/characters/player.json"));
-
-        p1 = Json.fromJson(playerNode, Characters.class);
-        p1.setLocation(map.get(0));
-    }
 }
