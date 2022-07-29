@@ -212,6 +212,23 @@ public class GameController {
         }
     }
 
+    public void printMap(){
+        BufferedReader mapreader;
+        try {
+            mapreader = new BufferedReader(new FileReader(
+                    "src/main/resources/GameText/gamemap.txt"));
+            String line = mapreader.readLine();
+            while (line != null) {
+                System.out.println(red + line + ANSI_RESET);
+                // read next line
+                line = mapreader.readLine();
+            }
+            mapreader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void printIntro() {
         try {
             Json json = new Json();
@@ -468,10 +485,7 @@ public class GameController {
                             addShield = true;
 
                         } else if (commandTwo.equals("map")) {
-                            for (Location location : townMap) {
-                                System.out.println(location.getName());
-                            }
-                            break;
+                            printMap();
 
                         } else if (commandTwo.equals("sword") || commandTwo.equals("bow")) {
                             return "You can only use the sword or the bow during combat.";
