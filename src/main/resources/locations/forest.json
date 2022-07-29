@@ -1,6 +1,6 @@
 {
   "name": "Forbidden Forest",
-  "description": "Look!!! There's a Ranger. Seems like he is blocking people to go further south",
+  "description": "A thick overgrown forest on the outskirts of town. A RANGER and his men block the path before you. It seems they're investigating the remains of a grisly attack on someone. Perhaps you should talk to him.",
   "items":[],
   "north": -1,
   "south": 8,

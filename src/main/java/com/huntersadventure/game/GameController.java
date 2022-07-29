@@ -1,10 +1,7 @@
 package com.huntersadventure.game;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.huntersadventure.gameobjects.Characters;
-import com.huntersadventure.gameobjects.Direction;
-import com.huntersadventure.gameobjects.Item;
-import com.huntersadventure.gameobjects.Location;
+import com.huntersadventure.gameobjects.*;
 import com.huntersadventure.jsonparser.Json;
 
 import java.io.*;
@@ -20,8 +17,9 @@ import java.util.stream.Collectors;
 
 public class GameController {
     public static final String ANSI_RESET = "\u001B[0m";  //resets text color back to default value.
-    public static final String cyan = "\u001B[36m";
-    public static final String yellow = "\u001B[33m";
+    public static final String cyan = "\033[1;36m";
+    public static final String yellow = "\033[1;33m";
+    public static final String red = "\033[1;31m";
 
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
     Characters p1 = new Characters();
@@ -33,7 +31,7 @@ public class GameController {
             "look", "help", "quit"));
 
     List<String> preparatoryCommands = new ArrayList<>(Arrays.asList(
-            "get", "go", "use"));
+            "get", "go", "use", "talk"));
 
     List<String> direction = new ArrayList<>(Arrays.asList(
             "north", "south", "west", "east"));
@@ -176,8 +174,9 @@ public class GameController {
     private void help() {
         System.out.println("Here are the basic commands:");
         System.out.println("go [direction] - move in the specified direction");
-        System.out.println("look - Read the description of the current room and the items available");
+        System.out.println("look - Read the description of the current room and the items available. Displays any NPCs in the area to speak to.");
         System.out.println("get [item] - pick up the specified item");
+        System.out.println("talk [NPC name] - Attempt to talk to the specified NPC. Viable NPC names are fully capitalized in location descriptions.");
         System.out.println("help - display commands available");
         System.out.println("quit - exit the game and return to menu");
         System.out.println("-----------------------------------------------------");
@@ -191,7 +190,7 @@ public class GameController {
                     "src/main/resources/GameText/banner.txt"));
             String line = reader.readLine();
             while (line != null) {
-                System.out.println(line);
+                System.out.println(red + line + ANSI_RESET);
                 // read next line
                 line = reader.readLine();
             }
@@ -256,7 +255,8 @@ public class GameController {
             message = processTwoCommand(wordlist);
         } else if (wordlist.size() == 3) {
             if (wordlist.get(0).equals("pick") && wordlist.get(1).equals("up")) {
-                wordlist.set(0, "get");
+                wordlist.set(1, wordlist.get(2));
+            } else if ((wordlist.get(0).equals("talk") && wordlist.get(1).equals("to"))){
                 wordlist.set(1, wordlist.get(2));
             }
             message = processTwoCommand(wordlist);
@@ -301,11 +301,11 @@ public class GameController {
                         }
                     }
 
-                    message = "You are in the " + p1.getLocation().getName() + ". This is the " +
+                    message = "You are in the " + yellow + p1.getLocation().getName() + ANSI_RESET +"\n" +
                             p1.getLocation().getDescription() + ".\n" +
-                            "Items available in the room: " + p1.getLocation().getItems() + "\n" +
+                            "Items available in the room: " + cyan + p1.getLocation().getItems() + ANSI_RESET + "\n" +
                             "Player's current health: " + p1.getHealth() + "\n" +
-                            "Player's inventory is as follow: \n" + inventory ;
+                            "Player's current inventory is: \n" + inventory ;
 
                     break;
 
@@ -334,23 +334,72 @@ public class GameController {
             message = commandOne + " is not a valid preparatory command.";
         }
 
+        if (commandOne.equalsIgnoreCase("talk")) {
+            if(p1.getLocation().getName().equalsIgnoreCase("Blacksmith Shop")){
+                if(commandTwo.equalsIgnoreCase("blacksmith")) {
+                    NPC.initBlacksmith();
+                } else if (commandTwo != "blacksmith") {
+                    return "That person isn't here!";
+                }
+            }if(p1.getLocation().getName().equals("Guard Tower")){
+                return "There is nobody here!";
+            }if(p1.getLocation().getName().equals("Forbidden Forest")){
+                if(commandTwo.equalsIgnoreCase("Ranger")) {
+                    NPC.initRanger();
+                } else if (commandTwo != "ranger") {
+                    return "That person isn't here!";
+                }
+            }if(p1.getLocation().getName().equals("Town Gate")){
+                if(commandTwo.equalsIgnoreCase("guard")){
+                    NPC.initGuard();
+                } else if (commandTwo != "guard") {
+                    return "That person isn't here!";
+                }
+            }if(p1.getLocation().getName().equals("Abandoned Checkpoint")){
+                if(commandTwo.equalsIgnoreCase("Bandit")){
+                NPC.initBandit();
+            } else if (commandTwo != "bandit"){
+                    return "That person isn't here!";
+                }
+            }if(p1.getLocation().getName().equals("Farmland")){
+                return "There are no people in the Farmlands!";
+            }if(p1.getLocation().getName().equals("Abandoned House")){
+                return "There is nobody left in this house. It's been abandoned for some time.";
+            }if(p1.getLocation().getName().equals("Inn")){
+                return "The Inn is empty. There haven't been travelers in the town lately.";
+            }if(p1.getLocation().getName().equals("Dungeon Entrance")){
+                if(commandTwo.equalsIgnoreCase("Faceless") || (commandTwo.equalsIgnoreCase("The Faceless"))){
+                    NPC.initFaceless();
+                }else if(commandTwo != "Faceless") {
+                    return "That enemy is not here!";
+                }
+            }if(p1.getLocation().getName().equals("Dungeon")){
+                if(commandTwo.equalsIgnoreCase("Man-Eater") || (commandTwo.equalsIgnoreCase("The Man-Eater"))){
+                NPC.initManEater();
+            } else if (commandTwo != "Faceless") {
+                    return "That enemy is not here!";
+                }
+            }
+
+        }
+
         if (commandOne.equals("go")) {
             switch (commandTwo) {
                 case "north":
                     goNorth();
-                    message = "Your current location is the " + p1.getLocation().getName();
+                    message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET;
                     break;
                 case "south":
                     goSouth();
-                    message = "Your current location is the " + p1.getLocation().getName();
+                    message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET;
                     break;
                 case "west":
                     goWest();
-                    message = "Your current location is the " + p1.getLocation().getName();
+                    message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET;
                     break;
                 case "east":
                     goEast();
-                    message = "Your current location is the " + p1.getLocation().getName();
+                    message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET;
                     break;
                 default:
                     message = "Invalid direction.";
@@ -375,7 +424,7 @@ public class GameController {
                         message = "There is no match.";
                     }
                 }
-                return "You pick up the " + commandTwo + ".";
+                return "You pick up the " + cyan + commandTwo + ANSI_RESET +".";
             } else {
                 message = "There is no " + commandTwo + " here.";
             }
@@ -500,20 +549,12 @@ public class GameController {
     public void startPrompt() throws IOException {
         boolean keepGoing = true;
         while (keepGoing) {
+            printBanner();
             System.out.println("Welcome to the Hunter's Adventure!");
             System.out.println("Do you want to see the instructions? (y/n)");
             String input = in.readLine();
             if (input.equals("y")) {
-                System.out.println("----------THE STORY SO FAR----------");
-                System.out.println("For eons humanity itself has been under attack from malevolent entities, vicious creatures, and the very forces of evil itself. Once nearly wiped out from existence,\n" +
-                        "they were saved from extinction by the actions of other brave humans that not only stood against these evils, but actively searched for it in order to destroy it. \n" +
-                        "These hunters have remained steadfast in their defiance over centuries, however evil never rests. \n" +
-                        "You are one of these hunters.\n\n" +
-                        "After tracking a particularly vicious creature, you find yourself in an unfamiliar town, plagued with a recent string of brutal attacks and mysterious vanishings.\n" +
-                        "Determined to find a link to the prey you're hunting, you decide to stay at the local inn, only to find yourself stuck as the town guards shut the gates, \n" +
-                        "blocking off entry or exit from any visitors or residents. Determined to end its reign of terror, it is up to you to find items, weapons, and \n" +
-                        "eventually destroy the creature that's been terrorizing the local town - whatever the cost...");
-                System.out.println("--------------------");
+                printIntro();
             } else if (input.equals("n")) {
                 keepGoing = false;
             } else {

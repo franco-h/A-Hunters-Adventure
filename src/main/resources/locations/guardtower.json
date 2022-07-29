@@ -1,6 +1,6 @@
 {
   "name": "Guard Tower",
-  "description": "A tower watching over the city",
+  "description": "A massive tower watching over the city. It seems all the guards are out on patrols due to the attacks - nobody else is here.",
   "items":["badge"],
   "north": -1,
   "south": -1,

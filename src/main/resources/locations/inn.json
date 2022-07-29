@@ -1,6 +1,6 @@
 {
   "name": "Inn",
-  "description": "Safely rest you head here",
+  "description": "Safely rest your head here.",
   "items":["bow"],
   "north": -1,
   "south": 1,
