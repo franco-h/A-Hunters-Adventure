@@ -75,15 +75,27 @@ public class GameController {
             Item sword = json.fromJson(swordNode, Item.class);
             Item shield = json.fromJson(shieldNode, Item.class);
 
+            // Index : 0
             gameItems.add(badge);
+            // Index : 1
             gameItems.add(arrows);
+            // Index : 2
             gameItems.add(locker);
+            // Index : 3
             gameItems.add(potion);
+            // Index : 4
             gameItems.add(map);
+            // Index : 5
             gameItems.add(bow);
+            // Index : 6
             gameItems.add(key);
+            // Index : 7
             gameItems.add(sword);
+            // Index : 8
             gameItems.add(shield);
+
+            // Assign shield to a variable.
+            Item shieldItem = gameItems.get(8);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -325,6 +337,8 @@ public class GameController {
         String commandOne;
         String commandTwo;
 
+        boolean addShield = false;
+
         String message = "";
 
         commandOne = wordlist.get(0);
@@ -451,6 +465,7 @@ public class GameController {
 
                         } else if (commandTwo.equals("key") && p1.getLocation().getItems().contains("locker")) {
                             System.out.println("WoW! It is an armor that can protect you from the monsters!");
+                            addShield = true;
 
                         } else if (commandTwo.equals("map")) {
                             for (Location location : townMap) {
@@ -471,6 +486,9 @@ public class GameController {
                     } else {
                         message = "You do not have that item.";
                     }
+                }
+                if (addShield) {
+                    p1.getInventory().add(gameItems.get(8));
                 }
             }
         }
