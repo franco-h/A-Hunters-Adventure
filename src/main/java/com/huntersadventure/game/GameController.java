@@ -7,9 +7,8 @@ import com.huntersadventure.jsonparser.Json;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 /**
  * Character Controller not yet in use. Below contains just an example.
@@ -186,7 +185,7 @@ public class GameController {
     private void help() {
         System.out.println("Here are the basic commands:");
         System.out.println("go [direction] - move in the specified direction");
-        System.out.println("look - Read the description of the current room and the items available. Displays any NPCs in the area to speak to.");
+        System.out.println("look - Read the description of the current room, and the items available and player's status. Displays any NPCs in the area to speak to.");
         System.out.println("get [item] - pick up the specified item");
         System.out.println("talk [NPC name] - Attempt to talk to the specified NPC. Viable NPC names are fully capitalized in location descriptions.");
         System.out.println("help - display commands available");
@@ -268,7 +267,6 @@ public class GameController {
         return strlist;
     }
 
-
     /**
      * parseCommand checks wordlist size and calls processSingleCommand,
      * processTwoCommand or lets user know their wordlist is invalid
@@ -334,6 +332,7 @@ public class GameController {
                             p1.getLocation().getDescription() + ".\n" +
                             "Items available in the room: " + cyan + p1.getLocation().getItems() + ANSI_RESET + "\n" +
                             "Player's current health: " + p1.getHealth() + "\n" +
+                            "Player's current shield: " + p1.getShield() + "\n" +
                             "Player's current inventory is: \n" + inventory ;
 
                     break;
@@ -355,6 +354,9 @@ public class GameController {
         String commandTwo;
 
         boolean addShield = false;
+        boolean itemInInventory = p1.getInventory().stream().anyMatch(i -> i.getName().equals(wordlist.get(1)));
+        boolean itemInGameItems = gameItems.stream().anyMatch(i -> i.getName().equals(wordlist.get(1)));
+        boolean itemInRoomItems = p1.getLocation().getItems().stream().anyMatch(i -> i.equals(wordlist.get(1)));
 
         String message = "";
 
@@ -388,8 +390,8 @@ public class GameController {
                 }
             }if(p1.getLocation().getName().equals("Abandoned Checkpoint")){
                 if(commandTwo.equalsIgnoreCase("Bandit")){
-                NPC.initBandit();
-            } else if (commandTwo != "bandit"){
+                    NPC.initBandit();
+                } else if (commandTwo != "bandit"){
                     return "That person isn't here!";
                 }
             }if(p1.getLocation().getName().equals("Farmland")){
@@ -406,8 +408,8 @@ public class GameController {
                 }
             }if(p1.getLocation().getName().equals("Dungeon")){
                 if(commandTwo.equalsIgnoreCase("Man-Eater") || (commandTwo.equalsIgnoreCase("The Man-Eater"))){
-                NPC.initManEater();
-            } else if (commandTwo != "Faceless") {
+                    NPC.initManEater();
+                } else if (commandTwo != "Faceless") {
                     return "That enemy is not here!";
                 }
             }
@@ -443,19 +445,14 @@ public class GameController {
             if (commandTwo.equals("locker") && p1.getLocation().getItems().contains("locker")) {
                 return "Hmmmmm. The locker is fixed to the wall, and you need a key to open it.";
 
-            } else if (p1.getLocation().getItems().contains(commandTwo)) {
-                for (Item item : gameItems) {
-                    if (item.getName().equals(commandTwo)) {
-                        p1.getInventory().add(item);
-                        p1.getLocation().getItems().remove(commandTwo);
-
-                        break;
-
-                    } else {
-                        message = "There is no match.";
-                    }
+            } else if (itemInRoomItems) {
+                if (itemInGameItems) {
+                    p1.getInventory().add(gameItems.stream()
+                            .filter(i -> i.getName().equals(commandTwo))
+                            .findFirst().orElse(null));
+                    p1.getLocation().getItems().remove(commandTwo);
+                    return "You pick up the " + cyan + commandTwo + ANSI_RESET +".";
                 }
-                return "You pick up the " + cyan + commandTwo + ANSI_RESET +".";
             } else {
                 message = "There is no " + commandTwo + " here.";
             }
@@ -465,42 +462,60 @@ public class GameController {
             if (p1.getInventory().isEmpty()) {
                 return "You have no items to use.";
             } else {
-                for (Item item : p1.getInventory()) {
-                    if (item.getName().equals(commandTwo)) {
-                        if (commandTwo.equals("potion")) {
-                            p1.setHealth(p1.getHealth() + item.getValue());
-                            p1.getInventory().remove(item);
-                            return "You use the potion and gain " + item.getValue() + " health.";
-                        } else if (commandTwo.equals("arrows")) {
-                            for (Item item2 : p1.getInventory()) {
-                                if (item2.getName().equals("bow")) {
-                                    item2.setValue(item2.getValue() + item.getValue());
-                                    p1.getInventory().remove(item);
-                                    return "You use the arrows and add them to the bow.";
-                                }
+                if (itemInInventory) {
+                    if (commandTwo.equals("potion")) {
+                        p1.setHealth(p1.getHealth() + Objects.requireNonNull(p1.getInventory().stream()
+                                .filter(i -> i.getName().equals(commandTwo))
+                                .findFirst().orElse(null)).getValue());
+                        p1.getInventory().remove(Objects.requireNonNull(p1.getInventory().stream()
+                                .filter(i -> i.getName().equals(commandTwo))
+                                .findFirst().orElse(null)));
+
+                        return "You use the potion and gain "  + cyan + "50"
+                                + ANSI_RESET + " health.";
+
+                    } else if (commandTwo.equals("arrows")) {
+                        for (Item bow : p1.getInventory()) {
+                            if (bow.getName().equals("bow")) {
+                                bow.setValue(bow.getValue() + Objects.requireNonNull(p1.getInventory().stream()
+                                        .filter(i -> i.getName().equals(commandTwo))
+                                        .findFirst().orElse(null)).getValue());
+
+                                p1.getInventory().remove(Objects.requireNonNull(p1.getInventory().stream()
+                                        .filter(i -> i.getName().equals(commandTwo))
+                                        .findFirst().orElse(null)));
+                                return "You use the arrows and add them to the bow.";
                             }
-
-                        } else if (commandTwo.equals("key") && p1.getLocation().getItems().contains("locker")) {
-                            System.out.println("WoW! It is an armor that can protect you from the monsters!");
-                            addShield = true;
-
-                        } else if (commandTwo.equals("map")) {
-                            printMap();
-
-                        } else if (commandTwo.equals("sword") || commandTwo.equals("bow")) {
-                            return "You can only use the sword or the bow during combat.";
-
-                        } else if (commandTwo.equals("shield")) {
-                            p1.setShield(p1.getShield() + item.getValue());
-                            p1.getInventory().remove(item);
-
-                        } else {
-                            return "You cannot use that item.";
                         }
+
+                    } else if (commandTwo.equals("key") && p1.getLocation().getItems().contains("locker")) {
+                        System.out.println("WoW! It is an armor that can protect you from the monsters!");
+                        addShield = true;
+
+                    } else if (commandTwo.equals("map")) {
+                        printMap();
+
+                    } else if (commandTwo.equals("sword") || commandTwo.equals("bow")) {
+                        return "You can only use the sword or the bow during combat.";
+
+                    } else if (commandTwo.equals("shield")) {
+                        p1.setShield(p1.getShield() + Objects.requireNonNull(p1.getInventory().stream()
+                                .filter(i -> i.getName().equals(commandTwo))
+                                .findFirst().orElse(null)).getValue());
+                        p1.getInventory().remove(Objects.requireNonNull(p1.getInventory().stream()
+                                .filter(i -> i.getName().equals(commandTwo))
+                                .findFirst().orElse(null)));
+
+                        return "You just equipped a body armor with " + cyan + "50"
+                                + ANSI_RESET + " shield protection.";
+
                     } else {
-                        message = "You do not have that item.";
+                        return "You cannot use that item.";
                     }
+                } else {
+                    message = "You do not have that item.";
                 }
+
                 if (addShield) {
                     p1.getInventory().add(gameItems.get(8));
                 }
@@ -511,14 +526,14 @@ public class GameController {
             if (p1.getInventory().isEmpty()) {
                 return "There is nothing to drop.";
             } else {
-                for (Item item : p1.getInventory()) {
-                    if (item.getName().equals(commandTwo)) {
-                        p1.getLocation().getItems().add(commandTwo);
-                        p1.getInventory().remove(item);
-                        return "You drop the " + commandTwo + ".";
-                    } else {
-                        message = "You do not have that item.";
-                    }
+                if (itemInInventory) {
+                    p1.getLocation().getItems().add(commandTwo);
+                    p1.getInventory().remove(Objects.requireNonNull(p1.getInventory().stream()
+                            .filter(i -> i.getName().equals(commandTwo))
+                            .findFirst().orElse(null)));
+                    return "You drop the " + commandTwo + ".";
+                } else {
+                    message = "You do not have that item.";
                 }
             }
         }
@@ -596,3 +611,4 @@ public class GameController {
     }
 
 }
+
