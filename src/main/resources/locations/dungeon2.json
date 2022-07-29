@@ -1,6 +1,6 @@
 {
   "name": "Dungeon",
-  "description": "There it is! The monster that we've been look for! Kill it to restore the peace of the town",
+  "description": "A dark secluded lair, the inner sanctum of whatever has been causing this destruction. There is no doubt in your mind, the Man-Eater is here! Now is your chance to stop it!",
   "items":[],
   "north": 8,
   "south": -1,

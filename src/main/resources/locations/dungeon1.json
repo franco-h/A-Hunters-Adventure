@@ -1,6 +1,6 @@
 {
   "name": "Dungeon Entrance",
-  "description": "We are finally here to kill the Man-Eater! But its minions are guarding the entrance! We need to beat them before we can get into the dungeon.",
+  "description": "A moss covered dungeon entrance leading to the lair of the Man-Eater. Its FACELESS minion guards the area. They'll need to be defeated before we can get into the dungeon.",
   "items":[],
   "north": 6,
   "south": 9,

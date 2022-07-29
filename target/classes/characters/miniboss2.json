@@ -2,5 +2,6 @@
   "name": "Faceless",
   "health": 50,
   "damage": 10,
-  "shield": 0
+  "shield": 0,
+  "desc": "A creature of legend, known only as Faceless, marked by a disfigured face stitched together with no discernible features.As it tries to speak, the only sounds it makes come out as angered, muffled growls"
 }
