@@ -13,4 +13,6 @@ As a player, you can execute the following commands:
 6. quit - exit the game and return to menu
 
 
-You would encounter a couple of checkpoints where you are required to have certain item(s) to gain access to the next area, so you need pay attention to the description of each location / item to look for hints! If you are lost in the game, you can obtain the map somewhere in the game and view all locations available in the game. 
+You would encounter a couple of checkpoints where you are required to have certain item(s) to gain access to the next area, so you need pay attention to the description of each location / item to look for hints!
+
+If you are lost in the game, you can obtain the map somewhere in the game and view all locations available in the game. 
