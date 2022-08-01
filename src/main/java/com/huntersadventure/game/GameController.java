@@ -27,12 +27,16 @@ public class GameController {
     Characters finalboss = new Characters();
     List<Location> townMap = new ArrayList<>();
     List<Item> gameItems = new ArrayList<>();
+    ArrayList<String> playerInventory = new ArrayList<>();
 
     List<String> commands = new ArrayList<>(Arrays.asList(
             "look", "help", "quit"));
 
     List<String> preparatoryCommands = new ArrayList<>(Arrays.asList(
-            "get", "go", "use", "talk", "attack", "defend"));
+            "get", "go", "use", "talk"));
+
+    List<String> direction = new ArrayList<>(Arrays.asList(
+            "north", "south", "west", "east"));
 
     // TODO: Retrieve items from JSON file and store in a list.
     // Items in the room or from NPCs
@@ -166,9 +170,9 @@ public class GameController {
             JsonNode finalBossNode = json.parse(json.getResourceStream("/characters/finalboss.json"));
 
             p1 = json.fromJson(playerNode, Characters.class);
-            p1 = json.fromJson(miniBoss1Node, Characters.class);
-            p1 = json.fromJson(miniBoss2Node, Characters.class);
-            p1 = json.fromJson(finalBossNode, Characters.class);
+            miniboss1 = json.fromJson(miniBoss1Node, Characters.class);
+            miniboss2 = json.fromJson(miniBoss2Node, Characters.class);
+            finalboss = json.fromJson(finalBossNode, Characters.class);
 
             p1.setLocation(map.get(0));
             miniboss1.setLocation(map.get(7));
@@ -441,7 +445,7 @@ public class GameController {
                 case "north":
                     goNorth();
                     message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET
-                            + ".\n" + p1.getLocation().getDescription() + ".\n" ;
+                            + ".\n";
                     break;
 
                 case "south":
@@ -451,7 +455,7 @@ public class GameController {
                     } else {
                         goSouth();
                         message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET
-                                + ".\n" + p1.getLocation().getDescription() + ".\n" ;
+                                + ".\n";
                     }
                     break;
 
@@ -461,7 +465,7 @@ public class GameController {
                     } else {
                         goWest();
                         message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET
-                                + ".\n" + p1.getLocation().getDescription() + ".\n" ;
+                                + ".\n";
                     }
                     break;
 
@@ -471,7 +475,7 @@ public class GameController {
                     } else {
                         goEast();
                         message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET
-                                + ".\n" + p1.getLocation().getDescription() + ".\n" ;
+                                + ".\n";
                     }
                     break;
 
@@ -587,14 +591,24 @@ public class GameController {
     }
 
     public void miniBossEncounter(Characters boss) {
-        System.out.printf("You ran into %s and defeated them in a gruesome battle", boss.getName());
+        System.out.printf("You ran into %s and defeated them in a gruesome battle\n", boss.getName());
+    }
+
+    public void finalBossEncounter(Characters boss) {
+        System.out.printf("Finally you meet %s the final boss\n", boss.getName());
+        System.out.println("After a tough battle you return back to town to end to tell the people of the news");
+        System.out.println("Please enter ( quit ) to exit the game or continue exploring");
     }
 
     public void movePlayer(Characters player, Location location) {
         player.setLocation(location);
-//        if (player.getLocation() == miniboss1.getLocation()) {
-//            miniBossEncounter(miniboss1);
-//        }
+        if (player.getLocation() == miniboss1.getLocation()) {
+            miniBossEncounter(miniboss1);
+        } else if (player.getLocation() == miniboss2.getLocation()) {
+            miniBossEncounter(miniboss2);
+        } else if (player.getLocation() == finalboss.getLocation()) {
+            finalBossEncounter(finalboss);
+        }
     }
 
     public int moveTo(Characters player, Direction direction) {
