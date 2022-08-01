@@ -1,9 +1,0 @@
-{
-  "name": "Abandoned Checkpoint",
-  "description": "The Town Guardsmen used to station guards the checkpoint here, but it was abandoned long ago. The checkpoint is now controlled by a BANDIT, eager to kill and rob wherever he can.",
-  "items":["key", "necklace"],
-  "north": 5,
-  "south": -1,
-  "west": -1,
-  "east": -1
-}

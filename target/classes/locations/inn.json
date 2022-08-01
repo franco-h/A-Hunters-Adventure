@@ -1,9 +1,0 @@
-{
-  "name": "Inn",
-  "description": "Safely rest your head here.",
-  "items":["bow"],
-  "north": -1,
-  "south": 1,
-  "west": -1,
-  "east": -1
-}

@@ -1,9 +1,0 @@
-{
-  "name": "Town Gate",
-  "description": "The Town entrance, marked by massive towers and heavy oak doors. What was once an open entry for travelers across the land has now been shuttered due to the recent attacks. A lone GUARD stands watch outside the gate. Perhaps you can speak to him.",
-  "items":["map"],
-  "north": 1,
-  "south": -1,
-  "west": 5,
-  "east": 6
-}

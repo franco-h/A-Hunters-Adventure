@@ -1,9 +1,0 @@
-{
-  "name": "Dungeon",
-  "description": "A dark secluded lair, the inner sanctum of whatever has been causing this destruction. There is no doubt in your mind, the Man-Eater is here! Now is your chance to stop it!",
-  "items":[],
-  "north": 8,
-  "south": -1,
-  "west": -1,
-  "east": -1
-}

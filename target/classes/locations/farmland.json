@@ -1,9 +1,0 @@
-{
-  "name": "Farmland",
-  "description": "People used to live freely outside the town; But ever since the lawless bandit took over the area, those that used to live in the farmlands have been too afraid to come back to their homes.",
-  "items": [],
-  "north": -1,
-  "south": 7,
-  "west": -1,
-  "east": 4
-}
