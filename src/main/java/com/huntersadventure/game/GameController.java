@@ -63,6 +63,7 @@ public class GameController {
             JsonNode keyNode = json.parse(json.getResourceStream("/items/key.json"));
             JsonNode swordNode = json.parse(json.getResourceStream("/items/sword.json"));
             JsonNode shieldNode = json.parse(json.getResourceStream("/items/shield.json"));
+            JsonNode necklaceNode = json.parse(json.getResourceStream("/items/necklace.json"));
 
             Item badge = json.fromJson(badgeNode, Item.class);
             Item arrows = json.fromJson(silverNode, Item.class);
@@ -73,6 +74,7 @@ public class GameController {
             Item key = json.fromJson(keyNode, Item.class);
             Item sword = json.fromJson(swordNode, Item.class);
             Item shield = json.fromJson(shieldNode, Item.class);
+            Item necklace = json.fromJson(necklaceNode, Item.class);
 
             // Index : 0
             gameItems.add(badge);
@@ -92,9 +94,12 @@ public class GameController {
             gameItems.add(sword);
             // Index : 8
             gameItems.add(shield);
+            // Index : 9
+            gameItems.add(necklace);
 
             // Assign shield to a variable.
             Item shieldItem = gameItems.get(8);
+            Item necklaceItem = gameItems.get(9);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -416,27 +421,50 @@ public class GameController {
         }
 
         if (commandOne.equals("go")) {
+
+            boolean hasNoBadge = p1.getInventory().stream().noneMatch((i -> i.getName().equals("badge")));
+
+            // TODO: When combat with the bandit is completed, add gameItems "necklace" to player's inventory
+            boolean noNecklace = p1.getInventory().stream().noneMatch(i -> i.getName().equals("necklace"));
+
             switch (commandTwo) {
                 case "north":
                     goNorth();
-                    message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET  +
-                            p1.getLocation().getDescription() + ".\n" ;
+                    message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET
+                            + ".\n" + p1.getLocation().getDescription() + ".\n" ;
                     break;
+
                 case "south":
-                    goSouth();
-                    message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET  +
-                            p1.getLocation().getDescription() + ".\n" ;
+                    if (p1.getLocation().getName().equals("Forbidden Forest") && noNecklace) {
+                        message = "You need to prove your combat skills to enter the Dungeon.\n" +
+                                "Help the Ranger to defeat the Bandit and gain their trust.";
+                    } else {
+                        goSouth();
+                        message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET
+                                + ".\n" + p1.getLocation().getDescription() + ".\n" ;
+                    }
                     break;
+
                 case "west":
-                    goWest();
-                    message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET  +
-                            p1.getLocation().getDescription() + ".\n" ;
+                    if (p1.getLocation().getName().equals("Town Gate") && hasNoBadge) {
+                        message = "The guardsman asks you to display the badge to exit the town gate. \n";
+                    } else {
+                        goWest();
+                        message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET
+                                + ".\n" + p1.getLocation().getDescription() + ".\n" ;
+                    }
                     break;
+
                 case "east":
-                    goEast();
-                    message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET  +
-                            p1.getLocation().getDescription() + ".\n" ;
+                    if (p1.getLocation().getName().equals("Town Gate") && hasNoBadge) {
+                        message = "The guardsman asks you to display the badge to exit the town gate. \n";
+                    } else {
+                        goEast();
+                        message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET
+                                + ".\n" + p1.getLocation().getDescription() + ".\n" ;
+                    }
                     break;
+
                 default:
                     message = "Invalid direction.";
                     break;
@@ -445,8 +473,13 @@ public class GameController {
 
         if (commandOne.equals("get")) {
 
+            boolean hasNoBow = p1.getInventory().stream().noneMatch((i -> i.getName().equals("bow")));
+
             if (commandTwo.equals("locker") && p1.getLocation().getItems().contains("locker")) {
                 return "Hmmmmm. The locker is fixed to the wall, and you need a key to open it.";
+
+            } else if (commandTwo.equals("badge") && itemInRoomItems && hasNoBow) {
+                return "The guardsman requires you to have a weapon before issuing you a badge \n";
 
             } else if (itemInRoomItems) {
                 if (itemInGameItems) {
