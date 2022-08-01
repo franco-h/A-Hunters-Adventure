@@ -214,10 +214,10 @@ public class GameController {
     }
 
     public void printBanner(){
-        BufferedReader reader;
         try {
-            reader = new BufferedReader(new FileReader(
-                    "src/main/resources/GameText/banner.txt"));
+            Json json = new Json();
+            BufferedReader reader;
+            reader = new BufferedReader(new InputStreamReader(json.getResourceStream("/GameText/banner.txt")));
             String line = reader.readLine();
             while (line != null) {
                 System.out.println(red + line + ANSI_RESET);
@@ -231,17 +231,17 @@ public class GameController {
     }
 
     public void printMap(){
-        BufferedReader mapreader;
         try {
-            mapreader = new BufferedReader(new FileReader(
-                    "src/main/resources/GameText/gamemap.txt"));
-            String line = mapreader.readLine();
+            Json json = new Json();
+            BufferedReader reader;
+            reader = new BufferedReader(new InputStreamReader(json.getResourceStream("/GameText/gamemap.txt")));
+            String line = reader.readLine();
             while (line != null) {
                 System.out.println(red + line + ANSI_RESET);
                 // read next line
-                line = mapreader.readLine();
+                line = reader.readLine();
             }
-            mapreader.close();
+            reader.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
