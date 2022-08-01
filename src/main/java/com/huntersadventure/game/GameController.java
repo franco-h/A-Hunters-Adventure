@@ -22,18 +22,17 @@ public class GameController {
 
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
     Characters p1 = new Characters();
+    Characters miniboss1 = new Characters();
+    Characters miniboss2 = new Characters();
+    Characters finalboss = new Characters();
     List<Location> townMap = new ArrayList<>();
     List<Item> gameItems = new ArrayList<>();
-    ArrayList<String> playerInventory = new ArrayList<>();
 
     List<String> commands = new ArrayList<>(Arrays.asList(
             "look", "help", "quit"));
 
     List<String> preparatoryCommands = new ArrayList<>(Arrays.asList(
-            "get", "go", "use", "talk"));
-
-    List<String> direction = new ArrayList<>(Arrays.asList(
-            "north", "south", "west", "east"));
+            "get", "go", "use", "talk", "attack", "defend"));
 
     // TODO: Retrieve items from JSON file and store in a list.
     // Items in the room or from NPCs
@@ -157,9 +156,20 @@ public class GameController {
         try {
             Json json = new Json();
             JsonNode playerNode = json.parse(json.getResourceStream("/characters/player.json"));
+            JsonNode miniBoss1Node = json.parse(json.getResourceStream("/characters/miniboss1.json"));
+            JsonNode miniBoss2Node = json.parse(json.getResourceStream("/characters/miniboss2.json"));
+            JsonNode finalBossNode = json.parse(json.getResourceStream("/characters/finalboss.json"));
 
             p1 = json.fromJson(playerNode, Characters.class);
+            p1 = json.fromJson(miniBoss1Node, Characters.class);
+            p1 = json.fromJson(miniBoss2Node, Characters.class);
+            p1 = json.fromJson(finalBossNode, Characters.class);
+
             p1.setLocation(map.get(0));
+            miniboss1.setLocation(map.get(7));
+            miniboss2.setLocation(map.get(8));
+            finalboss.setLocation(map.get(9));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -540,8 +550,15 @@ public class GameController {
         return message;
     }
 
+    public void miniBossEncounter(Characters boss) {
+        System.out.printf("You ran into %s and defeated them in a gruesome battle", boss.getName());
+    }
+
     public void movePlayer(Characters player, Location location) {
         player.setLocation(location);
+//        if (player.getLocation() == miniboss1.getLocation()) {
+//            miniBossEncounter(miniboss1);
+//        }
     }
 
     public int moveTo(Characters player, Direction direction) {
