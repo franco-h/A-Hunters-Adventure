@@ -1,7 +1,8 @@
 {
   "name": "Abandoned House",
-  "description": "A tower watching over the city",
-  "items": ["health potion","mystery box"],
+  "description": "A tower watching over the city. It seems whoever resided here has either died or left long ago. There is nobody here.",
+  "NPC": "",
+  "items": ["potion","locker"],
   "north": -1,
   "south": -1,
   "west": 1,
