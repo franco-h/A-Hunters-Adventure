@@ -1,0 +1,9 @@
+{
+  "name": "Blacksmith Shop",
+  "description": "The local BLACKSMITH storefront. Perhaps he can help you with equipping yourself with weapons and armor. You should try to talk to him.",
+  "items": ["arrows"],
+  "north": 0,
+  "south": 4,
+  "west": 2,
+  "east": 3
+}
