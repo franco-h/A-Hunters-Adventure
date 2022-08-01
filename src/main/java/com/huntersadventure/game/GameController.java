@@ -329,7 +329,6 @@ public class GameController {
                     }
 
                     message = "You are in the " + yellow + p1.getLocation().getName() + ANSI_RESET +"\n" +
-                            p1.getLocation().getDescription() + ".\n" +
                             "Items available in the room: " + cyan + p1.getLocation().getItems() + ANSI_RESET + "\n" +
                             "Player's current health: " + p1.getHealth() + "\n" +
                             "Player's current shield: " + p1.getShield() + "\n" +
@@ -420,19 +419,23 @@ public class GameController {
             switch (commandTwo) {
                 case "north":
                     goNorth();
-                    message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET;
+                    message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET  +
+                            p1.getLocation().getDescription() + ".\n" ;
                     break;
                 case "south":
                     goSouth();
-                    message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET;
+                    message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET  +
+                            p1.getLocation().getDescription() + ".\n" ;
                     break;
                 case "west":
                     goWest();
-                    message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET;
+                    message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET  +
+                            p1.getLocation().getDescription() + ".\n" ;
                     break;
                 case "east":
                     goEast();
-                    message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET;
+                    message = "Your current location is the " + yellow + p1.getLocation().getName() + ANSI_RESET  +
+                            p1.getLocation().getDescription() + ".\n" ;
                     break;
                 default:
                     message = "Invalid direction.";
